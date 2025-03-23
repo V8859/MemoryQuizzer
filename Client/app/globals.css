@@ -1,0 +1,276 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .NavbarTransitionStyle {
+    @apply transition-[width] z-50 ease-in-out duration-1000;
+  }
+
+  .Navbar {
+    @apply h-full z-50 flex flex-col NavbarTransitionStyle border-2 border-[var(--border-color)] rounded-xl;
+  }
+
+  .NavButton {
+    @apply rounded w-[90%] py-2 px-3 my-3 mx-3 flex justify-center border-2 border-solid;
+    border-color: var(--border-color);
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+    }
+  }
+  .sNavButton {
+    @apply rounded-l flex w-[100%] mb-5 py-1 justify-center relative h-[30px] z-50;
+    &:hover {
+      background-color: var(--hoverColorNav);
+      color: var(--textHoverColor);
+    }
+  }
+  .textStyle {
+    @apply z-50;
+    background-color: var(--hoverColorNav);
+    color: var(--textHoverColor);
+  }
+  .SideBarToggleButton {
+    @apply p-1.5 rounded hover:duration-1000 w-auto flex;
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+    }
+  }
+  .SEVAG {
+    fill: var(--foreground);
+  }
+  .NotebookBar {
+    @apply items-center bg-blue-300 h-[98%] justify-center overflow-y-auto w-full overflow-x-clip md:max-w-fit px-1 border-solid border-2 rounded;
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border-color);
+  }
+  .NotebookBarInput {
+    @apply px-1 rounded;
+    background-color: var(--background);
+    border: none;
+    outline: none;
+  }
+
+  .BigDivShadow {
+    @apply shadow-md shadow-[var(--hoverColor)];
+  }
+  .SmallDivShadow {
+    box-shadow: 1px 1px 5px 0px var(--hoverColor),
+      1px 1px 10px 1px var(--hoverColor);
+  }
+
+  .NoteArea {
+    @apply px-1 items-center overflow-x-hidden justify-center mx-0 md:mx-2 text-white w-full h-full bg-orange-400 rounded border-2 overflow-y-auto BigDivShadow;
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border-color);
+  }
+
+  .NoteItem {
+    @apply rounded w-full justify-between  cursor-pointer flex px-3 py-[1px] my-[3px];
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+    }
+  }
+  .NoteBox {
+    @apply flex h-[400px] md:h-[300px] flex-col my-2 shadow-sm shadow-[var(--hoverColor)] rounded mb-5 p-2;
+    background-color: var(--color-note);
+  }
+
+  .NoteObject {
+    @apply resize-none w-full bg-inherit focus:border-b-2 focus:border-b-[var(--hoverColor)] outline-none;
+    color: var(--foreground);
+  }
+  .NoteBody {
+    @apply NoteObject text-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    resize: none;
+    overflow-wrap: anywhere;
+  }
+  .NoteButtons {
+    @apply w-6 h-6 hover:scale-125 transition-all duration-300;
+  }
+  .DropDownOptionSelect {
+    @apply bg-red-900;
+  }
+  .CardViewButton {
+    @apply flex rounded p-1 px-2 gap-1 shadow-lg transition-transform duration-200 ease-in;
+    background-color: transparent;
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+      transform: scale(110%);
+    }
+    box-shadow: 0px 0px 10px 1px var(--hoverColor);
+  }
+  .PlayCard {
+    @apply flex text-center items-center SmallDivShadow rounded-xl justify-center p-1 px-2 w-[220px] text-wrap h-[300px] gap-1  transition-transform duration-200 ease-in;
+    background-color: transparent;
+    transition: background-color 1.2s ease;
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+      transform: translateY(-3px);
+      cursor: pointer;
+    }
+  }
+  .Composer {
+    @apply flex h-[95%] flex-col items-center;
+  }
+  .PlayCardAnimation {
+    transition: opacity ease-in-out 1s;
+    opacity: 1;
+  }
+  .PlayCardAnimationOne {
+    opacity: 0;
+  }
+
+  .PlayCardArea {
+    @apply px-1 items-center justify-center mx-2 text-white w-full h-[98%] bg-orange-400 rounded overflow-y-auto;
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border-color);
+  }
+
+  .PlayCardAreaSearchBox {
+    @apply w-full m-1 mx-16 p-1 placeholder:text-center text-center outline-none rounded-md SmallDivShadow;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.5s ease, color 0.5s ease;
+    &:hover {
+      background-color: rgba(162, 162, 187, 0.219);
+    }
+    &:focus {
+      border: var(--header) 0px solid;
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+      &::placeholder {
+        color: var(--textHoverColor);
+      }
+    }
+  }
+  .SizeChangeAnimation {
+    &:hover {
+      scale: 130%;
+    }
+    transition: scale 0.3s ease;
+  }
+  .DeckWarning {
+    @apply text-center w-fit m-2 rounded px-2 py-[1px] flex;
+    background-color: var(--Warning-back);
+    color: black;
+  }
+  .DeckWarningHide {
+    @apply invisible;
+  }
+  .basicBackground {
+    background-color: var(--background);
+  }
+  .basicForeground {
+    background-color: var(--foreground);
+  }
+  .basicHeaderColor {
+    background-color: var(--header);
+    color: var(--textHoverColor);
+  }
+  .WelcomeMessage {
+    background-color: var(--welcome-text);
+  }
+  .ModalButton {
+    @apply rounded w-[90%] py-2 px-3 my-3 mx-3 flex bg-[var(--welcome-text)] justify-center border-2 border-solid;
+    border-color: var(--border-color);
+    color: white;
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+    }
+  }
+}
+
+@layer base {
+  html {
+    --color-primary: #4285f4;
+    --color-note: #6a78a31f;
+    --color-secondary: #34a853;
+    --color-buttons: #fbbc05;
+    --color-typography: #ea4335;
+    --background: #ffffff;
+    --foreground: #000000;
+    --hoverColor: rgb(76, 85, 116);
+    --textHoverColor: #ffffff;
+    --border-color: transparent;
+    --Warning-back: #ebb71c81;
+    filter: invert(2%, hue(180deg));
+  }
+}
+
+html[data-theme="dark"] {
+  --welcome-text: rgba(0, 225, 255, 0.548);
+  --header: #494949;
+  --background: #000000;
+  --foreground: #ffffff;
+  --hoverColor: #494949;
+  --hoverColorNav: #494949;
+  --textHoverColor: #ffffff;
+  --border-color: transparent;
+  --card-color: #55555516;
+}
+
+html[data-theme="light"] {
+  --header: rgb(76, 85, 116);
+  --welcome-text: orange;
+  --background: #ffffff;
+  --foreground: #000000;
+  --hoverColor: rgb(76, 85, 116);
+  --hoverColorNav: rgb(76, 85, 116);
+  --textHoverColor: #ffffff;
+  --border-color: transparent;
+  --card-color: #ffffff;
+}
+
+html[data-theme="original"] {
+  --header: #e928ff44;
+  --welcome-text: rgb(255, 128, 128);
+  --background: #16191b;
+  --foreground: #ffffff;
+  --hoverColor: #e928ff44;
+  --hoverColorNav: #80088d;
+  --textHoverColor: #ffffff;
+  --border-color: white;
+  --card-color: #40114f11;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  filter: invert(2%) hue-rotate(0deg);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  left: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-radius: 3px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--foreground);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hoverColor);
+}
