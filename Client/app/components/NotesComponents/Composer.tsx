@@ -3,21 +3,21 @@ import React, { useState } from "react";
 import NoteList from "./NoteList";
 import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
+import { useTheme } from "@/app/context/ThemeContext";
 
 export const Composer = () => {
   const [noteId, setNoteId] = useState();
   const [payload, setPayload] = useState();
-  const [data, setData] = useState([]);
+  const { notebooks, setNotebooks } = useTheme();
+  const [notes, setNotes] = useState([]);
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
-  const [change, setChange] = useState();
   return (
     <div className="Composer md:flex-row">
       {modal ? (
         <DeleteConfirmation
           setModal={setModal}
-          setData={setData}
-          setChange={setChange}
+          setChange={setNotebooks}
           setNotebookName={setNotebookName}
           payload={payload}
         ></DeleteConfirmation>
@@ -25,17 +25,17 @@ export const Composer = () => {
         <>
           <NoteList
             notebookName={notebookName}
+            setNobookName={setNotebookName}
             noteId={noteId}
-            data={data}
-            setData={setData}
+            data={notes}
+            setData={setNotes}
           ></NoteList>
           <Notebooks
             setModal={setModal}
             setNotebookName={setNotebookName}
             setNoteId={setNoteId}
-            setData={setData}
-            setChange={setChange}
-            change={change}
+            setNotebooks={setNotebooks}
+            notebooks={notebooks}
             setPayload={setPayload}
           ></Notebooks>
         </>
@@ -46,13 +46,11 @@ export const Composer = () => {
 
 const DeleteConfirmation = ({
   setModal,
-  setData,
   setChange,
   setNotebookName,
   payload,
 }: {
   setModal: Function;
-  setData: Function;
   setChange: Function;
   setNotebookName: Function;
   payload: any;
@@ -78,16 +76,14 @@ const DeleteConfirmation = ({
               className="ModalButton"
               onClick={async () => {
                 setModal(false);
-
                 try {
                   const response = await deleteNotebook(payload);
                   const checker = await response.json();
                   if (checker === "success") {
-                    setData([]);
-                    setChange(change + 1);
+                    setChange([]);
                     setNotebookName("SELECT NOTEBOOK");
                   } else {
-                    setChange(change + 1);
+                    setChange((prevChange: number) => prevChange + 1);
                   }
                 } catch (err) {
                   console.log(err);

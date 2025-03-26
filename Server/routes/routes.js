@@ -6,6 +6,7 @@ const {
   getNotebooks,
   getNotebooksAndLength,
   deleteNotebook,
+  renameNotebook,
 } = require("../controllers/notebook");
 const { getNotes, addNote, saveNotes } = require("../controllers/note");
 const { addOrRetrieveUser } = require("../controllers/utility");
@@ -37,6 +38,7 @@ router.post(
 );
 router.post("/saveGame", updateScores);
 router.post("/notebook/delete", deleteNotebook);
+router.post("/notebook/rename", renameNotebook);
 
 /// GET
 router.get("/notebooks", getNotebooks);

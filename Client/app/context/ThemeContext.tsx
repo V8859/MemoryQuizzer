@@ -1,11 +1,14 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useScreenSize } from "../components/CustomHooks/useScreenSize";
+import { getNotebooks } from "../scripts/notebook";
 interface ThemeContextProps {
   theme: string;
   toggleTheme: () => void;
   expanded: boolean;
   toggleCollapse: () => void;
+  setNotebooks: Function;
+  notebooks: any;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -15,6 +18,7 @@ const restrictedScreenSizes = ["xs", "sm", "md"];
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState("light");
   const [expanded, setExpanded] = useState(false);
+  const [notebooks, setNotebooks] = useState([]);
   const screenSize = useScreenSize();
   const toggleTheme = () => {
     setTheme((prevTheme) => {
@@ -44,9 +48,27 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  useEffect(() => {
+    const fetchNotebooks = async () => {
+      const userId = localStorage.getItem("userId");
+      let response;
+      if (userId) {
+        response = await getNotebooks(userId);
+      }
+      setNotebooks(response);
+    };
+    fetchNotebooks();
+  }, [notebooks]);
   return (
     <ThemeContext.Provider
-      value={{ theme, toggleTheme, expanded, toggleCollapse }}
+      value={{
+        theme,
+        toggleTheme,
+        expanded,
+        toggleCollapse,
+        setNotebooks,
+        notebooks,
+      }}
     >
       {children}
     </ThemeContext.Provider>

@@ -76,9 +76,27 @@ const deleteNotebook = async (req, res) => {
   }
 };
 
+const renameNotebook = async (req, res) => {
+  const { id, name } = req.body;
+  let notebook = await prisma.notebook.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: name,
+    },
+  });
+  if (notebook) {
+    res.json("success");
+  } else {
+    res.json("error");
+  }
+};
+
 module.exports = {
   addNotebook,
   getNotebooks,
   getNotebooksAndLength,
   deleteNotebook,
+  renameNotebook,
 };

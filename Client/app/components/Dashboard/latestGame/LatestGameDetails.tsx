@@ -7,6 +7,13 @@ type Props = {
   data: any;
 };
 
+type item = {
+  date: string;
+  deckName: string;
+  score: number;
+  noOfCards: number;
+};
+
 const LatestGameDetails = (props: Props) => {
   const { data } = props;
   let badate = "";
@@ -30,7 +37,7 @@ const LatestGameDetails = (props: Props) => {
             <div className="flex flex-col text-white/90 text-md">
               {data.details.error
                 ? ""
-                : data.details.map((item, key) => {
+                : data.details.map((item: item, key: number | string) => {
                     let adate = new Date(
                       item.date.split("T")[0]
                     ).toLocaleDateString();

@@ -4,7 +4,7 @@ import React from "react";
 type Props = {
   title: string;
   href: string;
-  message: string;
+  message?: string | React.ReactNode;
   userName?: string | null | undefined;
   title2?: string;
   href2?: string;

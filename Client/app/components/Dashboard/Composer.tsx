@@ -17,7 +17,7 @@ const Composer = (props: Props) => {
       const id = localStorage.getItem("userId");
       try {
         const gameData = await getGameScores(id);
-        const updateData = { details: gameData };
+        const updateData: any = { details: gameData };
         if (updateData.details.error) {
           setData(null);
         } else {

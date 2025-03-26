@@ -14,34 +14,31 @@ type notebook = {
 
 const Notebooks = ({
   setNoteId,
-  setData,
+  setNotebooks,
+  notebooks,
   setNotebookName,
   setModal,
-  setChange,
-  change,
   setPayload,
 }: {
   setNoteId: any;
-  setData: any;
+  setNotebooks: Function;
+  notebooks: any;
   setNotebookName: Function;
   setModal: Function;
-  setChange: Function;
-  change: any;
   setPayload: Function;
 }) => {
-  const [notebooks, setNotebooks] = useState([]);
   const [check, setCheck] = useState(false);
 
-  useEffect(() => {
-    const fetchNotebooks = async () => {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        const books = await getNotebooks(userId);
-        setNotebooks(books);
-      }
-    };
-    fetchNotebooks();
-  }, [change]);
+  // useEffect(() => {
+  //   const fetchNotebooks = async () => {
+  //     const userId = localStorage.getItem("userId");
+  //     if (userId) {
+  //       const books = await getNotebooks(userId);
+  //       setNotebooks(books);
+  //     }
+  //   };
+  //   fetchNotebooks();
+  // }, [change]);
   return (
     <div className="NotebookBar BigDivShadow">
       <aside className="my-5 mx-1 rounded-xl items-center justify-center text-center md:text-left">

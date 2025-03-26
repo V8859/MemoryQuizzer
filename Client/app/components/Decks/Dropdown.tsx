@@ -1,11 +1,12 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/globals.css";
 import Select, { StylesConfig } from "react-select";
 import chroma from "chroma-js";
 import { Card } from "./Card";
 import { getNotebooks } from "@/app/scripts/notebook";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTheme } from "@/app/context/ThemeContext";
 
 type Props = {
   selectedOption: any;
@@ -96,34 +97,23 @@ const colourStyles: StylesConfig<ColourOption> = {
   }),
 };
 const DropDown = ({ selectedOption, setSelectedOption }) => {
-  const [notebooks, setNotebooks] = useState([]);
-
+  const { notebooks, setNotebooks } = useTheme();
+  const [options, setOptions] = useState([]);
   const handleChange = (selectedOption) => {
-    console.log(selectedOption);
     setSelectedOption(selectedOption);
   };
   useEffect(() => {
-    const fetchNotebooks = async () => {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        const books = await getNotebooks(userId);
-        for (const key in books) {
-          if (Object.prototype.hasOwnProperty.call(books, key)) {
-            const element = books[key];
-            element.label = element.name;
-          }
-        }
-
-        setNotebooks(books);
-      }
-    };
-    fetchNotebooks();
+    const books = notebooks.map((book) => ({
+      ...book,
+      label: book.name,
+    }));
+    setOptions(books);
   }, []);
 
   return (
     <div className="flex justify-center mb-[4px]">
       <Select
-        options={notebooks}
+        options={options}
         value={selectedOption}
         onChange={handleChange}
         styles={colourStyles}

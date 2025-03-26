@@ -11,6 +11,7 @@ const Urls = {
   saveGame: baseUrl + "saveGame",
   getGameScores: baseUrl + "latestGame",
   deleteNotebook: baseUrl + "notebook/delete",
+  renameNotebook: baseUrl + "notebook/rename",
 };
 
 export default Urls;

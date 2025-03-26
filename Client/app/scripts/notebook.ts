@@ -64,4 +64,19 @@ async function deleteNotebook(payload: Object) {
   return response;
 }
 
-export { getNotebooks, addNotebook, getNotebooksForPlay, deleteNotebook };
+async function renameNotebook(payload: Object) {
+  const response = await fetch(Urls.renameNotebook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return await response.json();
+}
+
+export {
+  getNotebooks,
+  addNotebook,
+  getNotebooksForPlay,
+  deleteNotebook,
+  renameNotebook,
+};

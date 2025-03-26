@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
-import Form from "next/form";
 import { CirclePlus, Save } from "lucide-react";
-import { stringify } from "querystring";
 import PageHeader from "../PageHeader";
+import { useTheme } from "@/app/context/ThemeContext";
+import Note from "./Note/Note";
+import NotebookName from "./notebook/NotebookName";
 
 export const NoteList = ({
   noteId,
@@ -16,7 +17,9 @@ export const NoteList = ({
   data: any;
   setData: any;
   notebookName: string;
+  setNobookName: Function;
 }) => {
+  const { notebooks, setNotebooks } = useTheme();
   const [update, setUpdate] = useState(false);
   useEffect(() => {
     if (noteId) {
@@ -76,23 +79,6 @@ export const NoteList = ({
       console.log(updatedData);
       return updatedData;
     });
-    // try {
-    //   const response = await fetch("http://localhost:8080/api/notes/add", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify(payload),
-    //   });
-    //   const cid = await response.json();
-
-    //   if (!(cid.cid === "failed")) {
-    //     console.log(cid);
-    //     skeleton.id = cid.cid;
-
-    //     console.log(skeleton);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
   }
 
   return (
@@ -102,7 +88,17 @@ export const NoteList = ({
           <PageHeader
             title="Dashboard"
             href="/"
-            message={notebookName.length > 0 ? notebookName : "SELECT BOOK"}
+            message={
+              notebookName.length > 0 ? (
+                <NotebookName
+                  notebookName={notebookName}
+                  setNotebooks={setNotebooks}
+                  noteId={noteId}
+                />
+              ) : (
+                "SELECT BOOK"
+              )
+            }
           ></PageHeader>
         </div>
         <form
@@ -140,169 +136,3 @@ export const NoteList = ({
 };
 
 export default NoteList;
-
-const Note = ({
-  Content,
-  identifier,
-  noteId,
-}: {
-  noteId: string;
-  Content: any;
-  identifier: string;
-}) => {
-  const { question, answer, link, tag } = Content;
-
-  // The states below are only meant for <Body/>
-  const [currentLines, setCurrentLines] = useState(0);
-  const [currentValue, setCurrentValue] = useState(answer);
-  // // // Please don't use for anything other than <Body/> or CharacterCounts
-
-  // console.log(Content.Title);
-  return (
-    <>
-      <div className="NoteBox">
-        <Title initialValue={question} identifier={identifier}></Title>
-        <Body
-          currentLines={currentLines}
-          setCurrentLines={setCurrentLines}
-          currentValue={currentValue}
-          setCurrentValue={setCurrentValue}
-          identifier={identifier}
-        ></Body>
-        <div className="flex flex-col items-center justify-between md:flex-row">
-          <CardLink initialValue={link} identifier={identifier}></CardLink>
-          <CharacterCounts currentValue={currentValue}></CharacterCounts>
-          <CardTag initialValue={tag} identifier={identifier}></CardTag>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const Title = ({
-  initialValue,
-  identifier,
-}: {
-  initialValue: string;
-  identifier: string;
-}) => {
-  const [currentValue, setCurrentValue] = useState(initialValue);
-
-  const handleChange = (e: any) => {
-    setCurrentValue(e.target.value);
-  };
-
-  return (
-    <div>
-      <textarea
-        placeholder="Question"
-        name={`${identifier}_question`}
-        value={currentValue}
-        onChange={handleChange}
-        className="NoteObject"
-        maxLength={250}
-      />
-    </div>
-  );
-};
-
-const CharacterCounts = (currentValue: any) => {
-  const curr = currentValue.currentValue;
-  return (
-    <div className="flex">
-      {curr.length}/{600}
-    </div>
-  );
-};
-
-const Body = ({
-  identifier,
-  currentLines,
-  setCurrentLines,
-  setCurrentValue,
-  currentValue,
-}: {
-  identifier: string;
-  currentLines: any;
-  setCurrentLines: any;
-  setCurrentValue: any;
-  currentValue: any;
-}) => {
-  const [stopper, setStopper] = useState(true);
-  const handleChange = (e: any) => {
-    if (e.target.value.length <= 600) {
-      setCurrentValue(e.target.value);
-    }
-  };
-
-  const handleKeydown = (e) => {
-    if (e.key === "Enter" && stopper) {
-      setCurrentLines(currentLines + 1);
-    }
-  };
-
-  return (
-    <div className="w-full h-full">
-      <textarea
-        placeholder="Answer"
-        rows={7}
-        cols={10}
-        name={`${identifier}_answer`}
-        value={currentValue}
-        onChange={handleChange}
-        onKeyDown={handleKeydown}
-        className="NoteBody"
-        maxLength={600}
-      ></textarea>
-    </div>
-  );
-};
-
-const CardLink = ({
-  initialValue,
-  identifier,
-}: {
-  initialValue: string;
-  identifier: string;
-}) => {
-  const [currentValue, setCurrentValue] = useState(initialValue);
-  const handleChange = (e: any) => {
-    setCurrentValue(e.target.value);
-  };
-  return (
-    <div>
-      <textarea
-        placeholder="Link"
-        name={`${identifier}_link`}
-        value={currentValue}
-        onChange={handleChange}
-        className="NoteObject placeholder:text-center text-center"
-      />
-    </div>
-  );
-};
-
-const CardTag = ({
-  initialValue,
-  identifier,
-}: {
-  initialValue: string;
-  identifier: string;
-}) => {
-  const [currentValue, setCurrentValue] = useState(initialValue);
-  const handleChange = (e: any) => {
-    setCurrentValue(e.target.value);
-  };
-  return (
-    <div>
-      <textarea
-        placeholder="Tag"
-        name={`${identifier}_tag`}
-        maxLength={20}
-        value={currentValue}
-        onChange={handleChange}
-        className="NoteObject placeholder:text-center text-center items-center justify-center"
-      />
-    </div>
-  );
-};
