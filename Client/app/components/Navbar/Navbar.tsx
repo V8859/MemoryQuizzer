@@ -32,13 +32,16 @@ interface SidebarContextProps {
 // };
 // // const session = await auth();
 export const Sidebar = async ({}) => {
-  const session = await auth();
-  const userId = await getUserOrCreate(
-    session?.user?.name,
-    session?.user?.email,
-    session
-  );
   const guestMode = await getGuestMode();
+  let userId = null;
+  const session = await auth();
+  if (!guestMode) {
+    userId = await getUserOrCreate(
+      session?.user?.name,
+      session?.user?.email,
+      session
+    );
+  }
 
   return (
     <div className="h-full item-center sticky NavbarTransitionStyle">
@@ -67,7 +70,7 @@ export const Sidebar = async ({}) => {
                       }
                     }}
                   >
-                    <SetUserId userId={userId}></SetUserId>
+                    {!guestMode ? <SetUserId userId={userId}></SetUserId> : ""}
 
                     <CustomButton
                       text="Logout"
@@ -101,7 +104,7 @@ export const Sidebar = async ({}) => {
                   tooltipText="Login"
                   action={() => signIn("google")}
                 ></CustomButton> */}
-                <form
+                {/* <form
                   className="w-full mx-1 object-center justify-center flex"
                   action={async (e) => {
                     "use server";
@@ -113,9 +116,9 @@ export const Sidebar = async ({}) => {
                     icon={<LogIn />}
                     tooltipText="Login"
                     type="submit"
-                    disabled={false}
+                    disabled={true}
                   ></CustomButton>
-                </form>
+                </form> */}
               </>
             )}
 
