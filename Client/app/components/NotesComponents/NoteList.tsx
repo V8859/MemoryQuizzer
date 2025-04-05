@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useEffect, useMemo, useState } from "react";
+import React, { SetStateAction, useEffect, useMemo } from "react";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { CirclePlus, Save } from "lucide-react";
 import PageHeader from "../PageHeader";
@@ -21,14 +21,20 @@ type Notes = Record<string, NoteType>;
 
 export const NoteList = ({
   noteId,
+  refetch,
   notebookName,
+  data,
+  setData,
 }: {
+  refetch: boolean;
+  data: NoteType[];
+  setData: React.Dispatch<SetStateAction<NoteType[]>>;
   noteId: string | undefined;
   notebookName: string;
   setNobookName: React.Dispatch<SetStateAction<string>>;
 }) => {
   const { setNotebooks } = useTheme();
-  const [data, setData] = useState<NoteType[]>([]);
+
   const { noteListFlag, toggleNoteList, toggleAlert } = useData();
   useEffect(() => {
     const noteFetcher = async () => {
@@ -45,14 +51,14 @@ export const NoteList = ({
     if (!guestMode) {
       noteFetcher();
     }
-  }, [noteId, noteListFlag, notebookName]);
+  }, [noteId, refetch, noteListFlag, setData]);
 
   useMemo(async () => {
     if (guestMode) {
       const fetchedNotes = await fetchNotes(setData, noteId);
       return fetchedNotes;
     }
-  }, [noteId]);
+  }, [noteId, refetch, setData]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();

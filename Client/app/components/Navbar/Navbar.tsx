@@ -1,7 +1,8 @@
-import React, { use } from "react";
+import React from "react";
 import { SVG } from "../../Styles/GlobalStyles";
 import { LogOut, LogIn, Palette, UserRoundSearch } from "lucide-react";
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
+// import { signIn } from "@/auth";
 import ToggleButton from "./ToggleButton";
 import { CustomButton } from "./CustomButton";
 import { SidebarItem } from "./SidebarItem";

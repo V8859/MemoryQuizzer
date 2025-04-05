@@ -5,22 +5,33 @@ import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
 import { useTheme } from "@/app/context/ThemeContext";
 import { guestMode, useData } from "@/app/context/DataContext";
-
+type NoteType = {
+  id: string;
+  createdAt?: string | Date;
+  score?: number;
+  notebookId?: string;
+  question: string;
+  answer: string;
+  tag: string;
+};
 type payload = {
   id: string;
 };
 
 export const Composer = () => {
-  const [noteId, setNoteId] = useState();
-  const [payload, setPayload] = useState<payload>();
+  const [noteId, setNoteId] = useState("");
+  const [payload, setPayload] = useState<payload | undefined>();
   const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
+  const [data, setData] = useState<NoteType[]>([]);
+  const [refetch, setRefetch] = useState(Boolean);
   return (
     <div className="Composer md:flex-row">
       {modal ? (
         <DeleteConfirmation
           setModal={setModal}
+          SetRefetch={setRefetch}
           setNotebooksChanged={setNotebooksChanged}
           setChange={setNotebooks}
           setNotebookName={setNotebookName}
@@ -29,6 +40,9 @@ export const Composer = () => {
       ) : (
         <>
           <NoteList
+            data={data}
+            setData={setData}
+            refetch={refetch}
             notebookName={notebookName}
             setNobookName={setNotebookName}
             noteId={noteId}
@@ -48,12 +62,16 @@ export const Composer = () => {
 
 const DeleteConfirmation = ({
   setModal,
+  SetRefetch,
+  setData,
   setChange,
   setNotebookName,
   payload,
   setNotebooksChanged,
 }: {
+  SetRefetch: React.Dispatch<SetStateAction<boolean>>;
   setModal: (prev: boolean) => void;
+  setData: React.Dispatch<SetStateAction<never[]>>;
   setChange: React.Dispatch<SetStateAction<never[]>>;
   setNotebookName: React.Dispatch<SetStateAction<string>>;
   setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
@@ -73,6 +91,7 @@ const DeleteConfirmation = ({
               className="ModalButton"
               onClick={() => {
                 setModal(false);
+                setData([]);
               }}
             >
               No
@@ -95,6 +114,7 @@ const DeleteConfirmation = ({
                   if (checker === "success") {
                     setChange([]);
                     setNotebookName("SELECT NOTEBOOK");
+                    SetRefetch((prev) => !prev);
                     toggleNoteList();
                     setNotebooksChanged((prevChange: number) => prevChange + 1);
                   } else {

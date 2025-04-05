@@ -8,7 +8,7 @@ type Props = {
   guestMode: boolean;
   changeGuestMode: (current: boolean) => void;
   noteListFlag: boolean;
-  toggleNoteList: (prev: boolean) => boolean;
+  toggleNoteList: () => void;
   showAlert: boolean;
   alertMessage: string;
   toggleAlert: (message: string, showIT: string) => void;
@@ -24,6 +24,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const toggleNoteList = () => {
+    console.log("NoteList toggled");
     setNoteListFlag((prev) => !prev);
   };
   const toggleAlert = (message: string, showIT: boolean = true) => {
