@@ -18,7 +18,7 @@ export const NoteList = ({
   setNobookName: Function;
 }) => {
   const { notebooks, setNotebooks } = useTheme();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const { noteListFlag, toggleNoteList, toggleAlert } = useData();
   if (!guestMode) {
     useEffect(() => {

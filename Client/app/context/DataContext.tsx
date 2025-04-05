@@ -26,7 +26,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const toggleNoteList = () => {
     setNoteListFlag((prev) => !prev);
   };
-  const toggleAlert = (message, showIT) => {
+  const toggleAlert = (message: string, showIT: boolean = true) => {
     setAlertMessage(message);
     setShowAlert((prev) => !prev);
     setAlertBool(showIT);

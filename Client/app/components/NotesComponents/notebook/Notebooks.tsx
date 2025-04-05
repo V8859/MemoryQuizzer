@@ -134,7 +134,7 @@ const MyForm = ({
     if (formData.get("name"))
       try {
         let data;
-        const response = await addNotebook(payload);
+        const response: any = await addNotebook(payload);
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
@@ -148,7 +148,7 @@ const MyForm = ({
         if (!(data === "failed")) {
           const check = [...notebook, data];
           // setNotebooks(check);
-          setNotebooksChanged((prev) => {
+          setNotebooksChanged((prev: number) => {
             return prev + 1;
           });
         }

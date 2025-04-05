@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export async function getGuestMode() {
+export async function getGuestMode(): Promise<boolean> {
   const cookieStore = await cookies();
   return cookieStore.get("GuestMode")?.value === "true";
 }

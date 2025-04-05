@@ -26,7 +26,7 @@ const PlayCard = (props: Props) => {
 
         const entries = Object.values(props.data.notes);
         props.setDeckName(props.data.name);
-        const sortedEntries = entries.sort(
+        const sortedEntries: any = entries.sort(
           (a: any, b: any) => new Date(a.createdAt) - new Date(b.createdAt)
         );
         const id = sortedEntries[0].id;

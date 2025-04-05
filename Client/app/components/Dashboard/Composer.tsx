@@ -8,16 +8,21 @@ type Props = {
   userName: string | undefined | null;
 };
 
-const Composer = (props: Props) => {
-  const [data, setData] = useState(null);
-  const [check, setCheck] = useState(false);
+type gameData = any;
 
+type updateData = {
+  details: gameData;
+};
+
+const Composer = (props: Props) => {
+  const [data, setData] = useState<updateData | null>(null);
+  const [check, setCheck] = useState(false);
   useEffect(() => {
     const getScores = async () => {
       const id = localStorage.getItem("userId");
       try {
         const gameData = await getGameScores(id);
-        const updateData: any = { details: gameData };
+        const updateData: updateData = { details: gameData };
         if (updateData.details.error) {
           setData(null);
         } else {
