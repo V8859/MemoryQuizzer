@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { SVG } from "../../Styles/GlobalStyles";
 import { LogOut, LogIn, Palette, UserRoundSearch } from "lucide-react";
 import { auth, signIn, signOut } from "@/auth";
@@ -64,7 +64,11 @@ export const Sidebar = async ({}) => {
                       }
                     }}
                   >
-                    {!guestMode ? <SetUserId userId={userId}></SetUserId> : ""}
+                    {!guestMode ? (
+                      <SetUserId remove={false} userId={userId}></SetUserId>
+                    ) : (
+                      ""
+                    )}
 
                     <CustomButton
                       text="Logout"
@@ -80,6 +84,8 @@ export const Sidebar = async ({}) => {
                       await setGuestMode(false);
                     }}
                   >
+                    <SetUserId userId={userId} remove={true}></SetUserId>
+
                     <CustomButton
                       text="Logout"
                       icon={<LogOut></LogOut>}
@@ -98,21 +104,21 @@ export const Sidebar = async ({}) => {
                   tooltipText="Login"
                   action={() => signIn("google")}
                 ></CustomButton> */}
-                <form
+                {/* <form
                   className="w-full mx-1 object-center justify-center flex"
                   action={async () => {
                     "use server";
                     await signIn("google");
                   }}
-                >
-                  <CustomButton
-                    text="Login"
-                    icon={<LogIn />}
-                    tooltipText="Login"
-                    type="submit"
-                    disabled={false}
-                  ></CustomButton>
-                </form>
+                > */}
+                <CustomButton
+                  text="Login"
+                  icon={<LogIn />}
+                  tooltipText="Login"
+                  // type="submit"
+                  disabled={true}
+                ></CustomButton>
+                {/* </form> */}
               </>
             )}
 
