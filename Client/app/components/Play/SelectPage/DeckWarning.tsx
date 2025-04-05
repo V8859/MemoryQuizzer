@@ -1,9 +1,9 @@
 "use client";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
-  setWarning: any;
+  setWarning: Dispatch<SetStateAction<boolean>>;
 };
 
 const DeckWarning = (props: Props) => {

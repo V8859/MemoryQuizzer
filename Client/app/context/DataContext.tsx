@@ -1,5 +1,5 @@
 "use client";
-import { useState, createContext, useContext, useRef } from "react";
+import { useState, createContext, useContext } from "react";
 
 import React from "react";
 export let guestMode: boolean = false;
@@ -8,10 +8,10 @@ type Props = {
   guestMode: boolean;
   changeGuestMode: (current: boolean) => void;
   noteListFlag: boolean;
-  toggleNoteList: Function;
+  toggleNoteList: (prev: boolean) => boolean;
   showAlert: boolean;
   alertMessage: string;
-  toggleAlert: Function;
+  toggleAlert: (message: string, showIT: string) => void;
   alertBool: boolean;
 };
 

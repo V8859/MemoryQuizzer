@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { SetStateAction } from "react";
 import { ArrowLeftToLine } from "lucide-react";
 import FlashCarousel from "./PlayView/FlashCarousel";
 
 type Props = {
   cards: [];
-  setPlayMode: Function;
+  setPlayMode: React.Dispatch<SetStateAction<boolean>>;
   deckName: string;
-  setDeckName: Function;
+  setDeckName: React.Dispatch<SetStateAction<string>>;
 };
 
 const PlayPage = (props: Props) => {
-  const [flipped, setFlipped] = useState(false);
   console.log(props.cards);
   const { cards } = props;
   return (
@@ -27,7 +26,7 @@ const PlayPage = (props: Props) => {
           Back
         </button>
       </div>
-      <FlashCarousel deckName={props.deckName} children={cards}></FlashCarousel>
+      <FlashCarousel deckName={props.deckName} cards={cards}></FlashCarousel>
     </div>
   );
 };

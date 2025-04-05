@@ -1,12 +1,13 @@
 import Urls from "./urls";
-import { useData, guestMode } from "../context/DataContext";
+import { guestMode } from "../context/DataContext";
 import { getDB, updateDB } from "../GuestMode/DB";
-import { extractAllNotesFromDB } from "./notes";
 
-async function getNotebooks(id?: any) {
+async function getNotebooks(id?: string | null) {
   if (guestMode) {
     const DB = await getDB();
-    return DB.notebooks.length > 0 ? DB.notebooks : [];
+    if (DB) {
+      return DB.notebooks.length > 0 ? DB.notebooks : [];
+    }
   } else {
     //   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const url = new URL(Urls.getNotebooks);
@@ -40,9 +41,7 @@ async function getNotebooksForPlay(id?: string) {
     const DB = await getDB();
     const notebooks = DB.notebooks ? DB.notebooks : [];
     const notes = DB.notes;
-    notes.filter((element) => {
-      element.notes.length > 3;
-    });
+    notes.filter((element) => element?.notes.length > 3);
     const correctIds = notebooksWithMinLength(4, notes);
     if (correctIds.length !== notebooks.length) {
       response.hidden = true;
@@ -91,24 +90,26 @@ async function getNotebooksForPlay(id?: string) {
   }
 }
 
-async function addNotebook(payload: Object) {
+async function addNotebook(payload: never) {
   if (guestMode) {
-    const DB: DBType | any = await getDB();
-    DB.notebooks.push(payload);
-    // console.log(DB.notebooks);
-    await updateDB(DB);
-    return { ok: true, notebooks: DB.notebooks };
+    const DB = await getDB();
+    if (DB) {
+      DB.notebooks.push(payload);
+      await updateDB(DB);
+      return { ok: true, notebooks: DB.notebooks };
+    }
   } else {
     const response = await fetch(Urls.addNotebook, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    return response;
+    const rez = await response.json();
+    return rez;
   }
 }
 
-async function deleteNotebook(payload: Object) {
+async function deleteNotebook(payload: { id: string }) {
   if (!guestMode) {
     const response = await fetch(Urls.deleteNotebook, {
       method: "POST",
@@ -118,19 +119,25 @@ async function deleteNotebook(payload: Object) {
     return response;
   } else {
     const DB = await getDB();
-    DB.notebooks = DB.notebooks.filter((element) => element.id !== payload.id);
-    console.log(DB?.notes);
-    DB.notes = DB?.notes.filter((element) => element.id !== payload.id);
-    console.log(DB?.notes);
-    await updateDB(DB);
-    return { message: "success", data: DB.notebooks };
+    if (DB) {
+      DB.notebooks = DB.notebooks.filter(
+        (element: { id: string }) => element.id !== payload.id
+      );
+      console.log(DB?.notes);
+      DB.notes = DB?.notes.filter(
+        (element: { id: string }) => element.id !== payload.id
+      );
+      console.log(DB?.notes);
+      await updateDB(DB);
+      return { message: "success", data: DB.notebooks };
+    }
   }
 }
 
-async function renameNotebook(payload: Object) {
+async function renameNotebook(payload: { name: string; id: string }) {
   if (guestMode) {
     const DB = await getDB();
-    DB?.notebooks.forEach((element) => {
+    DB?.notebooks.forEach((element: { id: string; name: string }) => {
       if (element.id === payload.id) element.name = payload.name;
     });
     await updateDB(DB);
@@ -144,9 +151,12 @@ async function renameNotebook(payload: Object) {
     return await response.json();
   }
 }
+type notes = {
+  id: string;
+};
 
-function notebooksWithMinLength(length: number, notes: []) {
-  let acceptableNotebooks = [];
+function notebooksWithMinLength(length: number, notes: notes[]) {
+  const acceptableNotebooks = [];
   for (let i = 0; i < notes.length; i++) {
     if (Object.values(notes[i].notes).length >= length) {
       acceptableNotebooks.push(notes[i].id);

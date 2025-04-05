@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import React from "react";
 import "@/app/Styles/Card.css";
 import { useTheme } from "@/app/context/ThemeContext";

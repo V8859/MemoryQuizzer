@@ -1,17 +1,23 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  SetStateAction,
+} from "react";
 import { useScreenSize } from "../components/CustomHooks/useScreenSize";
 import { getNotebooks } from "../scripts/notebook";
-import { guestMode, useData } from "./DataContext";
+import { guestMode } from "./DataContext";
 interface ThemeContextProps {
   theme: string;
   toggleTheme: () => void;
   expanded: boolean;
   toggleCollapse: () => void;
-  setNotebooks: Function;
-  notebooks: any;
+  setNotebooks: React.Dispatch<SetStateAction<never[]>>;
+  notebooks: never[];
   notebooksChanged: number;
-  setNotebooksChanged: any;
+  setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -113,7 +119,7 @@ const compareString = (main: string, compare: string | string[]) => {
   if (typeof compare === "string") {
     return main === compare;
   } else {
-    for (let r in compare) {
+    for (const r in compare) {
       if (compare[r] === main) {
         return true;
       }

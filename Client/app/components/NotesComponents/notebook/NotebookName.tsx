@@ -2,18 +2,15 @@
 import { useTheme } from "@/app/context/ThemeContext";
 import { renameNotebook } from "@/app/scripts/notebook";
 import { Check, PenIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-
-type Props = {};
+import React, { SetStateAction, useEffect, useState } from "react";
 
 const NotebookName = ({
   notebookName,
   noteId,
-  setNotebooks,
 }: {
   notebookName: string;
   noteId?: string;
-  setNotebooks: Function;
+  setNotebooks: React.Dispatch<SetStateAction<never[]>>;
 }) => {
   useEffect(() => {
     setValue(notebookName);
@@ -22,7 +19,7 @@ const NotebookName = ({
   const [inputMode, setInputMode] = useState(true);
   const [value, setValue] = useState(notebookName);
   const { setNotebooksChanged } = useTheme();
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
   const handleUpdate = async () => {

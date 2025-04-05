@@ -1,8 +1,6 @@
 import React from "react";
 
-type Props = {};
-
-const NoLogin = (props: Props) => {
+const NoLogin = () => {
   return (
     <div>
       <div className="h-screen">

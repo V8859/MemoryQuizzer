@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SetStateAction } from "react";
 const Body = ({
   identifier,
   currentLines,
@@ -8,11 +8,11 @@ const Body = ({
 }: {
   identifier: string;
   currentLines: number;
-  setCurrentLines: Function;
-  setCurrentValue: Function;
+  setCurrentLines: React.Dispatch<SetStateAction<number>>;
+  setCurrentValue: React.Dispatch<SetStateAction<string>>;
   currentValue: string;
 }) => {
-  const [stopper, setStopper] = useState(true);
+  const stopper = true;
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (e.target.value.length <= 600) {
       setCurrentValue(e.target.value);

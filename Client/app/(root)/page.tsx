@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import Composer from "../components/Dashboard/Composer";
 import "../globals.css";
-import NoLogin from "../components/NoLogin";
 import { getGuestMode } from "../GuestMode/GuestMode";
 import { session } from "./types";
 

@@ -1,12 +1,7 @@
 "use client";
 import { CirclePlus, Trash, X } from "lucide-react";
-import {
-  addNotebook,
-  deleteNotebook,
-  getNotebooks,
-} from "@/app/scripts/notebook";
-import React, { useEffect, useState } from "react";
-import { useData } from "@/app/context/DataContext";
+import { addNotebook } from "@/app/scripts/notebook";
+import React, { SetStateAction } from "react";
 import { useTheme } from "@/app/context/ThemeContext";
 import { v4 as uuidv4 } from "uuid";
 import { guestMode } from "@/app/context/DataContext";
@@ -15,42 +10,42 @@ type notebook = {
   name: string;
 };
 
+type payload = {
+  id: string;
+};
+
 const Notebooks = ({
   setNoteId,
-  setNotebooks,
   notebooks,
   setNotebookName,
   setModal,
   setPayload,
 }: {
-  setNoteId: any;
-  setNotebooks: Function;
-  notebooks: any;
-  setNotebookName: Function;
-  setModal: Function;
-  setPayload: Function;
+  setNoteId: React.Dispatch<SetStateAction<string>>;
+  notebooks: never[];
+  setNotebookName: React.Dispatch<SetStateAction<string>>;
+  setModal: (prev: boolean) => void;
+  setPayload: React.Dispatch<SetStateAction<payload>>;
 }) => {
-  const [check, setCheck] = useState(false);
-
-  if (guestMode) {
-    useEffect(() => {
-      const fetchNotebooks = async () => {
-        const userId = localStorage.getItem("userId");
-        if (userId) {
-          const books = await getNotebooks(userId);
-          setNotebooks(books);
-        }
-      };
-      fetchNotebooks();
-    }, []);
-  }
+  // useEffect(() => {
+  //   if (guestMode) {
+  //     const fetchNotebooks = async () => {
+  //       const userId = localStorage.getItem("userId");
+  //       if (userId) {
+  //         const books = await getNotebooks(userId);
+  //         setNotebooks(books);
+  //       }
+  //     };
+  //     fetchNotebooks();
+  //   }
+  // }, []);
 
   return (
     <div className="NotebookBar BigDivShadow">
       <aside className="my-5 mx-1 rounded-xl items-center justify-center text-center md:text-left">
         <nav className="h-full flex flex-col items-center md:items-start justify-center">
           <>
-            <MyForm notebook={notebooks} setNotebooks={setNotebooks}></MyForm>
+            <MyForm notebook={notebooks}></MyForm>
           </>
           <h1 className="md:w-[100%] w-[50%] pr-[40px] pl-2 text-lg basicHeaderColor rounded">
             Notebooks
@@ -93,15 +88,24 @@ const Notebooks = ({
   );
 };
 
-const MyForm = ({
-  notebook,
-  setNotebooks,
-}: {
-  notebook: any;
-  setNotebooks: any;
-}) => {
-  const { notebooksChanged, setNotebooksChanged } = useTheme();
-  const handleSubmit = async (e: any) => {
+type NotebookResponse = {
+  ok: boolean;
+  status: number;
+};
+type notebookF = {
+  id: string;
+  name: string;
+  score: number;
+};
+
+type GuestModeResponse = {
+  ok: boolean;
+  notebooks: [notebookF];
+};
+
+const MyForm = () => {
+  const { setNotebooksChanged } = useTheme();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
 
@@ -112,7 +116,7 @@ const MyForm = ({
       }
     }
 
-    const form = e.target;
+    const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     formData.append("id", userId); // Append user ID to the form data
     let payload;
@@ -134,28 +138,26 @@ const MyForm = ({
     if (formData.get("name"))
       try {
         let data;
-        const response: any = await addNotebook(payload);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        if (!guestMode) {
-          data = await response.json();
-        } else {
+        if (guestMode) {
+          const response: GuestModeResponse = await addNotebook(payload);
           data = response.notebooks;
+        } else {
+          const response: Response | NotebookResponse = await addNotebook(
+            payload
+          );
+          data = response;
         }
         // console.log(data);
         if (!(data === "failed")) {
-          const check = [...notebook, data];
+          // [...notebook, data];
           // setNotebooks(check);
           setNotebooksChanged((prev: number) => {
             return prev + 1;
           });
         }
       } catch (error) {
-        console.error("Error adding notebook:", error);
+        console.log(error);
       }
-
     form.reset(); // Clear the form after submission
   };
 

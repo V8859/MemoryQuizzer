@@ -6,15 +6,19 @@ import CardLink from "./CardLink";
 import CharacterCounts from "./CharacterCounts";
 import CardTag from "./CardTag";
 
-type Props = {};
+type content = {
+  question: string;
+  answer: string;
+  link: string;
+  tag: string;
+};
 
 const Note = ({
   Content,
   identifier,
-  noteId,
 }: {
   noteId: string;
-  Content: any;
+  Content: content;
   identifier: string;
 }) => {
   const { question, answer, link, tag } = Content;

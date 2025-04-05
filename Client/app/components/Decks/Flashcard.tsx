@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import React from "react";
 import "@/app/Styles/Card.css";
 import { useTheme } from "../../context/ThemeContext";
@@ -13,7 +13,7 @@ export const FlashCard = ({
   Front: string;
   Back: string;
   isFlipped: boolean;
-  setFlipped: any;
+  setFlipped: (isFlipped: boolean) => void;
 }) => {
   const { theme } = useTheme();
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { SetStateAction, useEffect, useMemo, useState } from "react";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { CirclePlus, Save } from "lucide-react";
 import PageHeader from "../PageHeader";
@@ -8,6 +8,16 @@ import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
 import { guestMode, useData } from "@/app/context/DataContext";
 import { v4 as uuid } from "uuid";
+type NoteType = {
+  id: string;
+  createdAt?: string | Date;
+  score?: number;
+  notebookId?: string;
+  question: string;
+  answer: string;
+  tag: string;
+};
+type Notes = Record<string, NoteType>;
 
 export const NoteList = ({
   noteId,
@@ -15,36 +25,36 @@ export const NoteList = ({
 }: {
   noteId: string | undefined;
   notebookName: string;
-  setNobookName: Function;
+  setNobookName: React.Dispatch<SetStateAction<string>>;
 }) => {
-  const { notebooks, setNotebooks } = useTheme();
-  const [data, setData] = useState<any>([]);
+  const { setNotebooks } = useTheme();
+  const [data, setData] = useState<NoteType[]>([]);
   const { noteListFlag, toggleNoteList, toggleAlert } = useData();
-  if (!guestMode) {
-    useEffect(() => {
-      const noteFetcher = async () => {
-        try {
-          if (noteId) {
-            if (!guestMode) {
-              await fetchNotes(setData, noteId);
-            }
+  useEffect(() => {
+    const noteFetcher = async () => {
+      try {
+        if (noteId) {
+          if (!guestMode) {
+            await fetchNotes(setData, noteId);
           }
-        } catch (err) {
-          console.log(err);
         }
-      };
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if (!guestMode) {
       noteFetcher();
-    }, [noteId, noteListFlag, notebookName]);
-  }
+    }
+  }, [noteId, noteListFlag, notebookName]);
 
-  if (guestMode) {
-    useMemo(async () => {
+  useMemo(async () => {
+    if (guestMode) {
       const fetchedNotes = await fetchNotes(setData, noteId);
       return fetchedNotes;
-    }, [noteId, noteListFlag]);
-  }
+    }
+  }, [noteId]);
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     if (
       noteId === "" ||
@@ -54,18 +64,18 @@ export const NoteList = ({
       return;
     } else {
       // Prevent the browser from reloading the page
-      const form = e.target;
+      const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
-      const notes: any = {};
-      for (let [key, value] of formData.entries()) {
+      const notes: Notes = {};
+      for (const [key, value] of formData.entries()) {
         console.log(key, value);
-        const [noteId, field] = key.split("_");
+        const [noteId, field]: string[] = key.split("_");
         if (!notes[noteId]) {
           notes[noteId] = {};
         }
         notes[noteId][field] = value;
       }
-      for (let key in data) {
+      for (const key in data) {
         notes[key].id = data[key].id;
         notes[key].score = data[key].score;
         if (guestMode) {
@@ -106,7 +116,7 @@ export const NoteList = ({
       }
     }
   }
-  async function addNote(e: any) {
+  async function addNote(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (noteId === "" || noteId === undefined) {
@@ -120,7 +130,7 @@ export const NoteList = ({
           link: "",
           tag: "",
           id: uuid(),
-          createdAt: new Date(),
+          createdAt: new Date().toISOString(),
           score: 0,
         };
       } else {
@@ -133,21 +143,21 @@ export const NoteList = ({
         };
       }
 
-      let payload;
-      if (!guestMode) {
-        payload = {
-          notes: skeleton,
-          id: noteId,
-          userId: localStorage.getItem("userId"),
-        };
-      } else {
-        payload = {
-          notes: skeleton,
-          id: noteId,
-        };
-      }
+      // let payload;
+      // if (!guestMode) {
+      //   payload = {
+      //     notes: skeleton,
+      //     id: noteId,
+      //     userId: localStorage.getItem("userId"),
+      //   };
+      // } else {
+      //   payload = {
+      //     notes: skeleton,
+      //     id: noteId,
+      //   };
+      // }
 
-      setData((prevData: any) => {
+      setData((prevData: NoteType[]) => {
         const updatedData = [...prevData, skeleton];
         return updatedData;
       });
@@ -181,7 +191,7 @@ export const NoteList = ({
           onSubmit={handleSubmit}
         >
           <ul className="w-full px-0 md:px-11">
-            {Object.keys(data).map((key, index) => (
+            {Object.keys(data).map((key) => (
               <li key={key}>
                 <Note
                   Content={data[key]}

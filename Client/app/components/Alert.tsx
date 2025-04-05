@@ -31,7 +31,7 @@ const Alert = (props: Props) => {
     }, interval);
 
     return () => clearInterval(fadeEffect);
-  }, [props.timing, showAlert]);
+  }, [props.timing, showAlert, alertBool]);
 
   return (
     <div className="fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] z-40">

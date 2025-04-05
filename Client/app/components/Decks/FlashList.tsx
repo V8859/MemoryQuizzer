@@ -2,10 +2,19 @@
 import React from "react";
 import { Card } from "./Card";
 
-const FlashList = ({ children }) => {
+type element = {
+  id: string;
+  question: string;
+  answer: string;
+};
+interface Props {
+  data: [element] | never[];
+}
+
+const FlashList = (props: Props) => {
   return (
     <div>
-      {children.map((element) => (
+      {props.data.map((element) => (
         <div key={element.id} className="mb-10">
           <Card Front={element.question} Back={element.answer} />
         </div>

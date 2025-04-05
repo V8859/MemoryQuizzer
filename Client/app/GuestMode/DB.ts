@@ -1,8 +1,8 @@
 type DBType =
   | {
-      notebooks: any;
-      notes: any;
-      gameScores: any;
+      notebooks: never[];
+      notes: never[];
+      gameScores: never[];
     }
   | undefined;
 

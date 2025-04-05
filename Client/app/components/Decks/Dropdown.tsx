@@ -3,14 +3,19 @@ import React, { useEffect, useState } from "react";
 import "@/app/globals.css";
 import Select, { StylesConfig } from "react-select";
 import chroma from "chroma-js";
-import { Card } from "./Card";
-import { getNotebooks } from "@/app/scripts/notebook";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTheme } from "@/app/context/ThemeContext";
 
+type selectedOption = {
+  createdAt: string;
+  id: string;
+  label: string;
+  name: string;
+  score: number;
+};
+
 type Props = {
-  selectedOption: any;
-  setSelectedOption: any;
+  selectedOption: selectedOption;
+  setSelectedOption: (selectedOption: selectedOption) => void;
 };
 
 const data = {
@@ -18,7 +23,7 @@ const data = {
   back: "white",
   text: "white",
 };
-const dot = (color = "transparent") => ({
+const dot = () => ({
   alignItems: "center",
   display: "flex",
 
@@ -90,16 +95,17 @@ const colourStyles: StylesConfig<ColourOption> = {
   },
   input: (styles) => ({ ...styles, ...dot() }),
   placeholder: (styles) => ({ ...styles, color: "white", ...dot("white") }),
-  singleValue: (styles, { data }) => ({
+  singleValue: (styles, {}) => ({
     ...styles,
     color: "white",
     ...dot("white"),
   }),
 };
-const DropDown = ({ selectedOption, setSelectedOption }) => {
-  const { notebooks, setNotebooks } = useTheme();
+const DropDown = (props: Props) => {
+  const { selectedOption, setSelectedOption } = props;
+  const { notebooks } = useTheme();
   const [options, setOptions] = useState([]);
-  const handleChange = (selectedOption) => {
+  const handleChange = (selectedOption: selectedOption) => {
     setSelectedOption(selectedOption);
   };
   useEffect(() => {
@@ -108,7 +114,7 @@ const DropDown = ({ selectedOption, setSelectedOption }) => {
       label: book.name,
     }));
     setOptions(books);
-  }, []);
+  }, [notebooks]);
 
   return (
     <div className="flex justify-center mb-[4px]">

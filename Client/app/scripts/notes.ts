@@ -1,36 +1,36 @@
 import Urls from "./urls";
 import { guestMode } from "../context/DataContext";
 import { getDB, updateDB } from "../GuestMode/DB";
+import { Dispatch, SetStateAction } from "react";
 
-type note = {
-  question: string;
-  id: string;
-  tag: string;
-  link: string;
-  answer: string;
-};
-
-type notes = [note];
+// type note = {
+//   question: string;
+//   id: string;
+//   tag: string;
+//   link: string;
+//   answer: string;
+// };
 
 export const fetchNotes = async (
-  setData: any,
-  noteId: any,
-  updateR?: Function
+  setData: Dispatch<SetStateAction<never[]>>,
+  noteId: string
 ) => {
   setData([]);
 
   const payload = { id: noteId };
   if (guestMode) {
     const DB = await getDB();
-    const notes = DB.notes.filter((note) => {
-      return note.id === noteId;
-    });
-    if (notes.length > 0) {
-      const obj = JSON.parse(JSON.stringify(notes[0].notes));
-      const arr = await mutateNotes(obj);
-      // setTimeout(() => setData(arr), 1);
-      setData(arr);
-      return arr;
+    if (DB) {
+      const notes = DB.notes.filter((note) => {
+        return note.id === noteId;
+      });
+      if (notes.length > 0) {
+        const obj = JSON.parse(JSON.stringify(notes[0].notes));
+        const arr = await mutateNotes(obj);
+        // setTimeout(() => setData(arr), 1);
+        setData(arr);
+        return arr;
+      }
     }
   } else {
     try {
@@ -51,7 +51,7 @@ export const fetchNotes = async (
   }
 };
 
-export const saveNotes = async (payload: any) => {
+export const saveNotes = async (payload: never | { notes: never[] }) => {
   if (guestMode) {
     const DB = await getDB();
     const noteIndex = findNoteList(DB?.notes, payload.id);
@@ -62,7 +62,9 @@ export const saveNotes = async (payload: any) => {
     } else {
       if (noteIndex !== null) {
         const NoteList = DB?.notes[noteIndex];
-        NoteList.notes = payload.notes;
+        if (NoteList) {
+          NoteList.notes = payload.notes;
+        }
       } else {
         DB?.notes.push(payload);
       }
@@ -85,7 +87,7 @@ export const saveNotes = async (payload: any) => {
   }
 };
 
-function findNoteList(notelist: any, NotebookId: string) {
+function findNoteList(notelist: [{ id: string }], NotebookId: string) {
   for (let index = 0; index < notelist.length; index++) {
     if (notelist[index].id === NotebookId) {
       return index;
@@ -94,9 +96,9 @@ function findNoteList(notelist: any, NotebookId: string) {
   return null;
 }
 
-export async function extractAllNotesFromDB(): Array {
+export async function extractAllNotesFromDB() {
   const DB = await getDB();
-  const notesWithTags: any = [];
+  const notesWithTags = [];
   for (let i = 0; i < DB.notes.length; i++) {
     Object.values(DB.notes[i].notes).forEach((element) => {
       notesWithTags.push({
@@ -114,18 +116,18 @@ export async function extractAllNotesFromDB(): Array {
   return JSON.parse(JSON.stringify(notesWithTags));
 }
 
-async function verifyConflictingTags(notes: any, DB): boolean {
-  console.log("CALLER");
-  const notesWithTags: any = await extractAllNotesFromDB();
+async function verifyConflictingTags(notes: never[]): Promise<boolean> {
+  // console.log("CALLER");
+  const notesWithTags: never[] = await extractAllNotesFromDB();
   console.log(notesWithTags);
-  let nnotes = Object.values(notes);
+  const nnotes = Object.values(notes);
 
   for (let i = 0; i < nnotes.length; i++) {
-    console.log("IM IN HERE HELP!", notesWithTags.length);
+    // console.log("IM IN HERE HELP!", notesWithTags.length);
     for (let j = 0; j < notesWithTags.length; j++) {
-      console.log(notes[i].tag, "===", notesWithTags[j].tag);
+      // console.log(notes[i].tag, "===", notesWithTags[j].tag);
       if (notes[i].tag === notesWithTags[j].tag) {
-        console.log("Hmmm what");
+        // console.log("Hmmm what");
         if (!(notes[i].id === notesWithTags[j].id)) {
           return true;
         }
@@ -133,18 +135,4 @@ async function verifyConflictingTags(notes: any, DB): boolean {
     }
   }
   return false;
-}
-
-function Hello(zzz) {
-  console.log("HELLO", zzz);
-}
-
-async function tryCatch(anyFunction: Function) {
-  try {
-    const yes = await anyFunction();
-    return yes;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
 }

@@ -10,11 +10,7 @@ interface buttonProps {
   type?: "button" | "submit" | "reset";
 }
 
-export const ToggleThemeButton: React.FC<buttonProps> = ({
-  icon,
-  action,
-  type,
-}) => {
+export const ToggleThemeButton: React.FC<buttonProps> = ({ icon, type }) => {
   const { expanded, theme, toggleTheme } = useTheme();
 
   return (

@@ -1,53 +1,52 @@
 "use client";
 
 import { getNotebooksForPlay } from "@/app/scripts/notebook";
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect } from "react";
 import PlayCard from "./PlayCard";
 import { guestMode } from "@/app/context/DataContext";
 
 type Props = {
   searchTerm: string;
-  setWarning: any;
-  setPlayMode: any;
-  setCards: any;
-  playMode: any;
-  decks: any;
-  setDecks: Function;
-  setDeckName: Function;
+  setWarning: React.Dispatch<SetStateAction<boolean>>;
+  setPlayMode: React.Dispatch<SetStateAction<boolean>>;
+  setCards: React.Dispatch<SetStateAction<never[]>>;
+  playMode: boolean;
+  decks: never[];
+  setDecks: React.Dispatch<SetStateAction<never[]>>;
+  setDeckName: React.Dispatch<SetStateAction<string>>;
 };
 
 const DeckList = (props: Props) => {
-  const requiredDeckLength = 4;
-
+  const { setDecks, setWarning, searchTerm, playMode, decks } = props;
   useEffect(() => {
     const fetchNotebooks = async () => {
       const userId = localStorage.getItem("userId");
       if (userId && !guestMode) {
         const books = await getNotebooksForPlay(userId);
         // console.log(books);
-        props.setDecks(books.books);
+        setDecks(books.books);
         // console.log(books.hidden);
-        props.setWarning(books.hidden);
+        setWarning(books.hidden);
         console.log("NO");
       }
       if (guestMode) {
         const books = await getNotebooksForPlay();
-        props.setDecks(books.books);
-        props.setWarning(books.hidden);
+        setDecks(books.books);
+        setWarning(books.hidden);
       }
     };
     fetchNotebooks();
-  }, [props.playMode]);
+  }, [playMode, setWarning, setDecks]);
   let filteredDecks = [];
-  if (props.decks) {
-    filteredDecks = props.decks.filter((ele: any) =>
-      ele.name.toLowerCase().includes(props.searchTerm.toLowerCase())
+  if (decks) {
+    filteredDecks = props.decks.filter((ele: { name: string }) =>
+      ele.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
   return (
     <div className="flex flex-wrap gap-6 items-center justify-center pb-1">
-      {filteredDecks.map((ele: any) => (
+      {filteredDecks.map((ele: { id: string }) => (
         <div key={ele.id}>
           {
             <PlayCard

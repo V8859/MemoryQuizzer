@@ -1,10 +1,16 @@
 "use client";
 import { useTheme } from "@/app/context/ThemeContext";
 import { MoreVertical } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 import "../../globals.css";
+
 interface UserInfoProps {
-  session?: any;
+  session?: {
+    user: {
+      image: string;
+    };
+  };
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({ session }) => {
@@ -14,11 +20,14 @@ const UserInfo: React.FC<UserInfoProps> = ({ session }) => {
     <>
       <>
         <div className="border-t flex p-3">
-          <img
-            src={session?.user.image}
+          <Image
+            alt=""
+            width={2.5}
+            height={2.5}
+            src={session?.user?.image}
             // alt={session?.user.image}
             className="w-10 h-10 rounded-md"
-          ></img>
+          ></Image>
           <div
             className={`flex justify-between items-center overflow-hidden transition all ${
               expanded ? "w-52 ml-3" : "w-0"

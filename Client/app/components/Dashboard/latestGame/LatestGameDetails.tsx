@@ -1,11 +1,10 @@
 import React from "react";
-import Cell from "./Cell";
 import Head from "./Head";
 import Row from "./Row";
 import { guestMode } from "@/app/context/DataContext";
 
 type Props = {
-  data: any;
+  data: [item];
 };
 
 type item = {
@@ -17,7 +16,7 @@ type item = {
 
 const LatestGameDetails = (props: Props) => {
   const { data } = props;
-  let badate = "";
+  // let badate = "";
   // console.log(data);
   // if (data != null) {
   //   let adate = data.details.date.split("T")[0];
@@ -39,7 +38,7 @@ const LatestGameDetails = (props: Props) => {
               {data.details.error
                 ? ""
                 : data.details.map((item: item, key: number | string) => {
-                    let adate = new Date(
+                    const adate = new Date(
                       item.date.split("T")[0]
                     ).toLocaleDateString();
                     return (

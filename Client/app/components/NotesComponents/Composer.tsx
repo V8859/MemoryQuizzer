@@ -1,14 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import NoteList from "./NoteList";
 import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
 import { useTheme } from "@/app/context/ThemeContext";
 import { guestMode, useData } from "@/app/context/DataContext";
 
+type payload = {
+  id: string;
+};
+
 export const Composer = () => {
   const [noteId, setNoteId] = useState();
-  const [payload, setPayload] = useState();
+  const [payload, setPayload] = useState<payload>();
   const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
@@ -33,7 +37,6 @@ export const Composer = () => {
             setModal={setModal}
             setNotebookName={setNotebookName}
             setNoteId={setNoteId}
-            setNotebooks={setNotebooks}
             notebooks={notebooks}
             setPayload={setPayload}
           ></Notebooks>
@@ -50,13 +53,13 @@ const DeleteConfirmation = ({
   payload,
   setNotebooksChanged,
 }: {
-  setModal: Function;
-  setChange: Function;
-  setNotebookName: Function;
-  setNotebooksChanged: Function;
-  payload: any;
+  setModal: (prev: boolean) => void;
+  setChange: React.Dispatch<SetStateAction<never[]>>;
+  setNotebookName: React.Dispatch<SetStateAction<string>>;
+  setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
+  payload: payload;
 }) => {
-  const { noteListFlag, toggleNoteList } = useData();
+  const { toggleNoteList } = useData();
   return (
     <div className="w-full top-0 left-0 h-full fixed z-50 bg-gray-900 opacity-75 overflow-hidden">
       <div className="w-full h-full flex items-center justify-center">

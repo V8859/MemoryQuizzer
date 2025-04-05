@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-type Props = {};
-
 const CardLink = ({
   initialValue,
   identifier,
@@ -10,7 +8,7 @@ const CardLink = ({
   identifier: string;
 }) => {
   const [currentValue, setCurrentValue] = useState(initialValue);
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentValue(e.target.value);
   };
   return (

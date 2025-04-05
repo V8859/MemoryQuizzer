@@ -13,7 +13,6 @@ const CardView = ({ notebookId }: { notebookId: string | undefined }) => {
   useEffect(() => {
     if (notebookId) {
       fetchNotes(setData, notebookId);
-      console.log(data);
     }
   }, [notebookId]);
   return (
@@ -32,9 +31,9 @@ const CardView = ({ notebookId }: { notebookId: string | undefined }) => {
         </div>
         {data.length > 0 ? (
           view ? (
-            <FlashList children={data}></FlashList>
+            <FlashList data={data}></FlashList>
           ) : (
-            <FlashCarousel children={data}></FlashCarousel>
+            <FlashCarousel data={data}></FlashCarousel>
           )
         ) : (
           ""

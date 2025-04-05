@@ -1,14 +1,20 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
-import Select from "react-select/base";
+import React, { useState } from "react";
 import DropDown from "../Dropdown";
-import FlashCarousel from "../FlashCarousel";
 import CardView from "../CardView";
 import PageHeader from "../../PageHeader";
 
+type selectedOption = {
+  createdAt: string;
+  id: string;
+  label: string;
+  name: string;
+  score: number;
+};
+
 const Composer = () => {
-  const [selectedOption, setSelectedOption] = useState();
-  console.log(selectedOption);
+  const [selectedOption, setSelectedOption] = useState<selectedOption>();
+  console.log("THIS IS SELECTED OPTION", selectedOption);
   return (
     <>
       <div className="Composer">

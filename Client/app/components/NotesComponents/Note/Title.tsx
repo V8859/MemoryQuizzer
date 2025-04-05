@@ -10,7 +10,7 @@ const Title = ({
 }) => {
   const [currentValue, setCurrentValue] = useState(initialValue);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentValue(e.target.value);
   };
 

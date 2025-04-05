@@ -8,8 +8,13 @@ const SetGuestMode = (props: Props) => {
   const { changeGuestMode } = useData();
   const { guest } = props;
 
-  guest ? changeGuestMode(true) : changeGuestMode(false);
-  guest ? initDb() : "";
+  if (guest) {
+    changeGuestMode(true);
+    initDb();
+  } else {
+    changeGuestMode(false);
+    // clearDb();
+  }
   return null;
 };
 
@@ -25,6 +30,6 @@ function initDb() {
   }
 }
 
-function clearDb() {
-  localStorage.setItem("DB", JSON.stringify([]));
-}
+// function clearDb() {
+//   localStorage.setItem("DB", JSON.stringify([]));
+// }

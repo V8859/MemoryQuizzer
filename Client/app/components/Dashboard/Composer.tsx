@@ -7,16 +7,15 @@ import PageHeader from "../PageHeader";
 type Props = {
   userName: string | undefined | null;
 };
-
-type gameData = any;
-
+type gameData = {
+  error: boolean;
+};
 type updateData = {
   details: gameData;
 };
 
 const Composer = (props: Props) => {
   const [data, setData] = useState<updateData | null>(null);
-  const [check, setCheck] = useState(false);
   useEffect(() => {
     const getScores = async () => {
       const id = localStorage.getItem("userId");
@@ -29,10 +28,8 @@ const Composer = (props: Props) => {
           setData(updateData);
           console.log("UPDATE DATA", updateData);
         }
-        setCheck(true);
       } catch (err) {
         console.error("ERROR FETCHING GAME SCORES:", err);
-        setCheck(false);
       }
     };
     getScores();

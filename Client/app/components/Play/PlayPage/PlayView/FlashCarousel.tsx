@@ -1,43 +1,58 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Card } from "../Card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { saveGameScores } from "@/app/scripts/play";
 
+type NoteType = {
+  id: string;
+  createdAt?: string | Date;
+  score: number;
+  notebookId?: string;
+  question: string;
+  answer: string;
+  tag: string;
+};
+
+type Choice = {
+  id: string;
+  notebookId: string;
+};
+
 const FlashCarousel = ({
-  children,
+  cards,
   deckName,
 }: {
-  children: any;
+  cards: NoteType[];
   deckName: string | null;
 }) => {
   const [curr, setCurr] = useState(0);
   const [animationClass, setAnimationClass] = useState("");
   const [isflipped, setFlipped] = useState(false);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<NoteType[]>([]);
   const [correct, setCorrect] = useState("");
-  const [correctKey, setCorrectKey] = useState();
+  const [correctKey, setCorrectKey] = useState<string | number>();
   const [disabled, setDisabled] = useState(false);
   const [game, setGame] = useState(true);
   const [gameScore, setGameScore] = useState(Number);
   const [message, setMessage] = useState("");
-  const [noteData, setNoteData] = useState();
-  const [notebookData, setNotebookData] = useState();
+  const [noteData, setNoteData] = useState<{ [key: string]: number }>({});
+  const [notebookData, setNotebookData] = useState<{ [key: string]: number }>();
   useEffect(() => {
-    if (curr == children.length) {
+    if (curr == cards.length) {
       setDisabled(true);
       setFlipped(true);
     }
     const setter = async () => {
-      console.log("CHILDREN", children);
-      let op = getOptions(curr, children);
+      console.log("CHILDREN", cards);
+      const op = getOptions(curr, cards);
       setOptions(op);
     };
     setter();
-  }, [curr]);
+  }, [curr, cards]);
 
-  const handleIncrements = (choice: any) => {
-    setNoteData((previousNoteData: any) => {
+  const handleIncrements = (choice: Choice) => {
+    setNoteData((previousNoteData) => {
       const newNoteData = { ...previousNoteData };
       if (choice.id in newNoteData) {
         newNoteData[choice.id] += 1;
@@ -46,7 +61,7 @@ const FlashCarousel = ({
       }
       return newNoteData;
     });
-    setNotebookData((prevData: any) => {
+    setNotebookData((prevData) => {
       const newData = { ...prevData };
       if (choice.notebookId in newData) {
         newData[choice.notebookId] += 1;
@@ -56,8 +71,8 @@ const FlashCarousel = ({
       return newData;
     });
   };
-  const handeDecrements = (choice: any) => {
-    setNoteData((previousNoteData: any) => {
+  const handeDecrements = (choice: Choice) => {
+    setNoteData((previousNoteData) => {
       const newNoteData = { ...previousNoteData };
       if (choice.id in newNoteData) {
         newNoteData[choice.id] -= 1;
@@ -66,7 +81,7 @@ const FlashCarousel = ({
       }
       return newNoteData;
     });
-    setNotebookData((oldData: any) => {
+    setNotebookData((oldData) => {
       const newData = { ...oldData };
       if (choice.notebookId in newData) {
         newData[choice.notebookId] -= 1;
@@ -78,16 +93,16 @@ const FlashCarousel = ({
     });
   };
 
-  const handeChoice = (choice: any, key: any) => {
-    if (curr < children.length) {
-      if (children[curr] == choice) {
+  const handeChoice = (choice: Choice, key: number | string) => {
+    if (curr < cards.length) {
+      if (cards[curr] == choice) {
         console.log("NotebookID", choice.notebookId);
         setCorrect("bg-green-400 rounded-xl");
         setGameScore(gameScore + 1);
-        handleIncrements(children[curr]);
+        handleIncrements(cards[curr]);
       } else {
         setCorrect("bg-red-400 rounded-xl");
-        handeDecrements(children[curr]);
+        handeDecrements(cards[curr]);
       }
 
       setCorrectKey(key);
@@ -100,7 +115,7 @@ const FlashCarousel = ({
     setFlipped(false);
     setDisabled(false);
     setCorrect("");
-    if (curr < children.length - 1) {
+    if (curr < cards.length - 1) {
       setAnimationClass(
         "transform transition-transform duration-1000 ease-in-out opacity-0 translate-x-[75%]"
       );
@@ -111,27 +126,24 @@ const FlashCarousel = ({
         notebooks: { notebookData },
         gameResult: {
           gameScore,
-          id: children[0].userId,
+          id: cards[0].userId,
           nameOfDeck: deckName,
           noOfCards: curr + 1,
         },
       };
       console.log(payload);
       try {
-        const res = await saveGameScores(payload);
-        if (res) {
-          const data = await res.json();
-        }
+        await saveGameScores(payload);
       } catch (err) {
         console.log(err);
       }
 
-      const messag = endMessage(gameScore, children.length);
+      const messag = endMessage(gameScore, cards.length);
       setMessage(messag);
     }
 
     setTimeout(() => {
-      if (curr < children.length - 1) {
+      if (curr < cards.length - 1) {
         setCurr(curr + 1);
       }
       setAnimationClass(
@@ -140,24 +152,24 @@ const FlashCarousel = ({
     }, 200);
   };
 
-  const handlePrev = () => {
-    setFlipped(false);
-    if (curr > 0) {
-      setAnimationClass(
-        "transform transition-transform duration-1000 ease-in-out opacity-0 -translate-x-[75%]"
-      );
-    }
+  // const handlePrev = () => {
+  //   setFlipped(false);
+  //   if (curr > 0) {
+  //     setAnimationClass(
+  //       "transform transition-transform duration-1000 ease-in-out opacity-0 -translate-x-[75%]"
+  //     );
+  //   }
 
-    setTimeout(() => {
-      if (curr > 0) {
-        console.log(curr);
-        setCurr(curr - 1 + children.length);
-      }
-      setAnimationClass(
-        "transform transition-transform duration-1000 ease-in-out opacity-100 translate-x-0"
-      );
-    }, 250);
-  };
+  //   setTimeout(() => {
+  //     if (curr > 0) {
+  //       console.log(curr);
+  //       setCurr(curr - 1 + cards.length);
+  //     }
+  //     setAnimationClass(
+  //       "transform transition-transform duration-1000 ease-in-out opacity-100 translate-x-0"
+  //     );
+  //   }, 250);
+  // };
 
   return (
     <>
@@ -167,8 +179,8 @@ const FlashCarousel = ({
             <div className={`p-2 flex  ${animationClass}`}>
               {
                 <Card
-                  Front={children[curr].question}
-                  Back={children[curr].answer}
+                  Front={cards[curr].question}
+                  Back={cards[curr].answer}
                   isFlipped={isflipped}
                 />
               }
@@ -197,7 +209,7 @@ const FlashCarousel = ({
             >
               <ChevronLeft />
             </button>
-            <div>{`${curr + 1}/${children.length}`}</div>
+            <div>{`${curr + 1}/${cards.length}`}</div>
             <button
               onClick={handleNext}
               className="p-1 rounded-full shadow bg-white/80 text-gray-800 hover:bg-white"
@@ -237,7 +249,7 @@ const FlashCarousel = ({
             <h1>Results</h1>
             <div className="flex flex-col items-center gap-4">
               <h1>{message}</h1>
-              <h1>You got {gameScore + "/" + children.length} correct</h1>
+              <h1>You got {gameScore + "/" + cards.length} correct</h1>
             </div>
           </div>
         </div>
@@ -248,13 +260,11 @@ const FlashCarousel = ({
 
 export default FlashCarousel;
 
-const AnswerView = () => {};
-
 function getOptions(currIndex: number, data: []) {
-  let newData = data.slice();
+  const newData = data.slice();
   newData.splice(currIndex, 1);
-  let options = [];
-  let used = [];
+  const options = [];
+  const used = [];
   options.push(data[currIndex]);
   let check = true;
   while (check) {
@@ -262,6 +272,7 @@ function getOptions(currIndex: number, data: []) {
     x = Math.floor(x);
     if (options.length == 4) {
       shuffle(options);
+      check = false;
       return options;
     }
     if (options.length < 5 && !used.includes(x)) {
@@ -273,7 +284,7 @@ function getOptions(currIndex: number, data: []) {
 }
 
 // Fisher-Yates Algorithm // Courtesy of Bro Code
-function shuffle(array: any[]) {
+function shuffle(array: never[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const random = Math.floor(Math.random() * (i + 1));
     [array[i], array[random]] = [array[random], array[i]];
@@ -286,7 +297,7 @@ function endMessage(gameScore: number, length: number) {
   const betterMessage = "Good job, a bit more practice and you'll get there";
   const amazingMessage = "Amazing! You got them all correct!";
 
-  let value = gameScore / length;
+  const value = gameScore / length;
 
   if (value === 1) {
     return amazingMessage;

@@ -28,8 +28,7 @@ async function getPlayDeck(id: string) {
       return []; // Return an empty array in case of error
     }
   } else {
-    const DB = await getDB();
-    let playDeck: any[] = [];
+    const playDeck: never[] = [];
     const allNotes = await extractAllNotesFromDB();
     const firstNote = [...allNotes].filter((elemeent) => elemeent.id === id)[0];
     playDeck.push(firstNote);
@@ -41,7 +40,11 @@ async function getPlayDeck(id: string) {
   }
 }
 
-async function saveGameScores(data: any) {
+type gameResult = {
+  date: string | Date;
+};
+
+async function saveGameScores(data: { gameResult: gameResult }) {
   if (guestMode) {
     const DB = await getDB();
     data.gameResult.date = new Date();
@@ -65,7 +68,7 @@ async function saveGameScores(data: any) {
   }
 }
 
-async function getGameScores(data: any) {
+async function getGameScores(data: never) {
   if (guestMode) {
     const DB = await getDB();
     return DB?.gameScores;
@@ -88,7 +91,7 @@ async function getGameScores(data: any) {
 function findNextCard(
   notes: [],
   tag: string,
-  playDeck: any[],
+  playDeck: never[],
   visited: Set<object>
 ) {
   let notez = JSON.parse(JSON.stringify(notes));
@@ -127,14 +130,12 @@ function selectCardFromList(notes: []) {
   return notes[random];
 }
 
-function updateNotebookScores(notebookScores: any, DB: any) {
+function updateNotebookScores(notebookScores: never, DB: never) {
   for (let i = 0; i < DB?.notebooks.length; i++) {
-    const notebookZ = Object.entries(notebookScores).map(
-      ([key, value], index) => ({
-        key,
-        value,
-      })
-    );
+    const notebookZ = Object.entries(notebookScores).map(([key, value]) => ({
+      key,
+      value,
+    }));
     for (let j = 0; j < notebookZ.length; j++) {
       if (DB?.notebooks[i].id === notebookZ[j].key) {
         DB.notebooks[i].score += notebookZ[j].value;
@@ -144,7 +145,7 @@ function updateNotebookScores(notebookScores: any, DB: any) {
   return DB;
 }
 
-function updateNoteScores(noteScores: any, DB: any) {
+function updateNoteScores(noteScores: { noteData: never[] }, DB: never) {
   const data = noteScores.noteData;
 
   const notez = Object.entries(data).map(([key, value], index) => ({

@@ -1,22 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import DeckList from "./DeckList";
 import DeckWarning from "./DeckWarning";
 
 type Props = {
-  setPlayMode: any;
-  setCards: any;
-  playMode: any;
-  setDecks: Function;
-  decks: any;
-  setDeckName: Function;
+  setPlayMode: Dispatch<SetStateAction<boolean>>;
+  setCards: Dispatch<SetStateAction<never[]>>;
+  playMode: boolean;
+  setDecks: Dispatch<SetStateAction<never[]>>;
+  decks: never[];
+  setDeckName: Dispatch<SetStateAction<string>>;
 };
 
 const SelectPage = (props: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [warning, setWarning] = useState(false);
-  const [warning2, setCloseWarning] = useState(warning);
-
   return (
     <div className="flex h-full overflow-x-hidden">
       <div className="PlayCardArea overflow-x-hidden">

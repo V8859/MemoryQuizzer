@@ -1,13 +1,19 @@
 import { useData } from "@/app/context/DataContext";
 import { getPlayDeck } from "@/app/scripts/play";
-import React, { useState } from "react";
-import Alert from "../../Alert";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
-  data: any;
-  setPlayMode: any;
-  setCards: any;
-  setDeckName: Function;
+  data: {
+    name: string;
+    notes: { [key: string]: Entries };
+  };
+  setPlayMode: Dispatch<SetStateAction<boolean>>;
+  setCards: Dispatch<SetStateAction<never[]>>;
+  setDeckName: Dispatch<SetStateAction<string>>;
+};
+type Entries = {
+  id: string;
+  createdAt: string | Date;
 };
 
 const PlayCard = (props: Props) => {
@@ -26,20 +32,29 @@ const PlayCard = (props: Props) => {
 
         const entries = Object.values(props.data.notes);
         props.setDeckName(props.data.name);
-        const sortedEntries: any = entries.sort(
-          (a: any, b: any) => new Date(a.createdAt) - new Date(b.createdAt)
-        );
-        const id = sortedEntries[0].id;
-        const playDeck = await getPlayDeck(id);
-        if (playDeck.length > 3) {
-          props.setPlayMode(true);
-        } else {
-          toggleAlert("Only found 3 links, please modify your cards.", true);
-        }
+        if (entries.length > 0) {
+          const sortedEntries: Entries[] = entries.sort(
+            (a: Entries, b: Entries) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
 
-        if (playDeck) {
-          console.log("PlayDeck", playDeck);
-          props.setCards(playDeck);
+          if (sortedEntries.length > 0) {
+            const id = sortedEntries[0].id;
+            const playDeck = await getPlayDeck(id);
+            if (playDeck.length > 3) {
+              props.setPlayMode(true);
+            } else {
+              toggleAlert(
+                "Only found 3 links, please modify your cards.",
+                true
+              );
+            }
+
+            if (playDeck) {
+              console.log("PlayDeck", playDeck);
+              props.setCards(playDeck);
+            }
+          }
         }
       }}
     >

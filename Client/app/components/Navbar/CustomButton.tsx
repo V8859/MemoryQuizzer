@@ -2,7 +2,6 @@
 import { RightToolTip } from "./RightToolTip";
 import { useTheme } from "@/app/context/ThemeContext";
 import "../../globals.css";
-import { useEffect } from "react";
 
 interface buttonProps {
   text: string;
@@ -22,7 +21,6 @@ export const CustomButton: React.FC<buttonProps> = ({
   action,
   type,
   disabled,
-  guest,
 }) => {
   const { expanded } = useTheme();
 

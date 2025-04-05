@@ -1,14 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SelectPage from "./SelectPage/SelectPage";
 import PlayPage from "./PlayPage/PlayPage";
 import PageHeader from "../PageHeader";
-import Alert from "../Alert";
-import { useData } from "@/app/context/DataContext";
 
-type Props = {};
-
-const Composer = (props: Props) => {
+const Composer = () => {
   const [playMode, setPlayMode] = useState(false);
   const [cards, setCards] = useState([]);
   const [decks, setDecks] = useState([]);

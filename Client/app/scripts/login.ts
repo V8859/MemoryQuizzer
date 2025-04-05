@@ -1,7 +1,8 @@
-import { auth } from "@/auth";
-
-async function getUserOrCreate(name: any, email: any, session: any) {
-  const sesion = await auth();
+async function getUserOrCreate(
+  name: string,
+  email: string,
+  session: null | object
+) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const payload = {
     name: name,

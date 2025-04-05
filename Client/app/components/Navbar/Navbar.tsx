@@ -1,12 +1,6 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { SVG } from "../../Styles/GlobalStyles";
-import {
-  LogIn,
-  LogOut,
-  MoreVertical,
-  Palette,
-  UserRoundSearch,
-} from "lucide-react";
+import { LogOut, LogIn, Palette, UserRoundSearch } from "lucide-react";
 import { auth, signIn, signOut } from "@/auth";
 import ToggleButton from "./ToggleButton";
 import { CustomButton } from "./CustomButton";
@@ -17,9 +11,9 @@ import SetUserId from "./SetUserId";
 import getUserOrCreate from "@/app/scripts/login";
 import { getGuestMode, setGuestMode } from "@/app/GuestMode/GuestMode";
 import SetGuestMode from "@/app/components/Navbar/SetGuestMode";
-interface SidebarContextProps {
-  expanded: boolean;
-}
+// interface SidebarContextProps {
+//   expanded: boolean;
+// }
 
 // // interface SidebarProps {
 // //   expanded: boolean;
@@ -48,7 +42,7 @@ export const Sidebar = async ({}) => {
       <aside className=" h-[96%] m-1 my-5 ml-1 md:ml-3 BigDivShadow rounded-xl sticky">
         <nav className="Navbar">
           <div className="p-1 md:p-4 pb-2 flex justify-between items-center">
-            <img alt="" src="?"></img>
+            <div></div>
             <ToggleButton></ToggleButton>
           </div>
           <ul className="flex-1 px-1 items-center justify-center">
@@ -104,9 +98,9 @@ export const Sidebar = async ({}) => {
                   tooltipText="Login"
                   action={() => signIn("google")}
                 ></CustomButton> */}
-                {/* <form
+                <form
                   className="w-full mx-1 object-center justify-center flex"
-                  action={async (e) => {
+                  action={async () => {
                     "use server";
                     await signIn("google");
                   }}
@@ -116,9 +110,9 @@ export const Sidebar = async ({}) => {
                     icon={<LogIn />}
                     tooltipText="Login"
                     type="submit"
-                    disabled={true}
+                    disabled={false}
                   ></CustomButton>
-                </form> */}
+                </form>
               </>
             )}
 
