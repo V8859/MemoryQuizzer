@@ -2,6 +2,7 @@
 import { RightToolTip } from "./RightToolTip";
 import { useTheme } from "@/app/context/ThemeContext";
 import "../../globals.css";
+import { useEffect } from "react";
 
 interface buttonProps {
   text: string;
@@ -10,6 +11,8 @@ interface buttonProps {
   action?: () => void;
   type?: "button" | "submit" | "reset";
   toggleType?: "theme";
+  disabled?: boolean;
+  guest?: boolean;
 }
 
 export const CustomButton: React.FC<buttonProps> = ({
@@ -18,13 +21,20 @@ export const CustomButton: React.FC<buttonProps> = ({
   tooltipText,
   action,
   type,
+  disabled,
+  guest,
 }) => {
   const { expanded } = useTheme();
 
   return (
     <button
+      disabled={disabled}
       className={`"overflow-hidden " ${
-        expanded ? "NavButton" : "sNavButton group "
+        !disabled
+          ? expanded
+            ? "NavButton"
+            : "sNavButton group "
+          : "rounded-l flex w=[100%] mb-5 py-1 justify-center relative h-[30px] z-50"
       }`}
       onClick={
         action
@@ -36,12 +46,23 @@ export const CustomButton: React.FC<buttonProps> = ({
       type={type}
     >
       <div className="w-[30px]">{icon}</div>
-      <span
-        className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
-      >
-        {text}
-      </span>
-      {!expanded && <RightToolTip text={tooltipText}></RightToolTip>}
+      {disabled ? (
+        <span
+          className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
+        >
+          {`${text} not available in demo`}
+        </span>
+      ) : (
+        <span
+          className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
+        >
+          {text}
+        </span>
+      )}
+
+      {expanded || disabled ? null : (
+        <RightToolTip text={tooltipText}></RightToolTip>
+      )}
     </button>
   );
 };

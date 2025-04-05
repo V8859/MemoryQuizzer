@@ -1,90 +1,163 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { CirclePlus, Save } from "lucide-react";
 import PageHeader from "../PageHeader";
 import { useTheme } from "@/app/context/ThemeContext";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
+import { guestMode, useData } from "@/app/context/DataContext";
+import { v4 as uuid } from "uuid";
 
 export const NoteList = ({
   noteId,
-  data,
-  setData,
   notebookName,
 }: {
   noteId: string | undefined;
-  data: any;
-  setData: any;
   notebookName: string;
   setNobookName: Function;
 }) => {
   const { notebooks, setNotebooks } = useTheme();
-  const [update, setUpdate] = useState(false);
-  useEffect(() => {
-    if (noteId) {
-      fetchNotes(setData, noteId);
-    }
-  }, [noteId, update]);
+  const [data, setData] = useState([]);
+  const { noteListFlag, toggleNoteList, toggleAlert } = useData();
+  if (!guestMode) {
+    useEffect(() => {
+      const noteFetcher = async () => {
+        try {
+          if (noteId) {
+            if (!guestMode) {
+              await fetchNotes(setData, noteId);
+            }
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      noteFetcher();
+    }, [noteId, noteListFlag, notebookName]);
+  }
+
+  if (guestMode) {
+    useMemo(async () => {
+      const fetchedNotes = await fetchNotes(setData, noteId);
+      return fetchedNotes;
+    }, [noteId, noteListFlag]);
+  }
 
   async function handleSubmit(e: any) {
-    // Prevent the browser from reloading the page
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const notes: any = {};
-    for (let [key, value] of formData.entries()) {
-      const [noteId, field] = key.split("_");
-      if (!notes[noteId]) {
-        notes[noteId] = {};
+    if (
+      noteId === "" ||
+      noteId === undefined ||
+      notebookName === "SELECT BOOK"
+    ) {
+      return;
+    } else {
+      // Prevent the browser from reloading the page
+      const form = e.target;
+      const formData = new FormData(form);
+      const notes: any = {};
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+        const [noteId, field] = key.split("_");
+        if (!notes[noteId]) {
+          notes[noteId] = {};
+        }
+        notes[noteId][field] = value;
       }
-      notes[noteId][field] = value;
-    }
-    for (let key in data) {
-      notes[key].id = data[key].id;
-    }
-    const payload = {
-      notes: notes,
-      id: noteId,
-      userId: localStorage.getItem("userId"),
-    };
-    console.log("Saving:", payload);
-    try {
-      const response = await saveNotes(payload);
-      if (response) {
-        const sanData = await response.json();
-        setUpdate(!update);
+      for (let key in data) {
+        notes[key].id = data[key].id;
+        notes[key].score = data[key].score;
+        if (guestMode) {
+          notes[key].createdAt = data[key].createdAt;
+          notes[key].notebookId = noteId;
+        }
       }
-      // console.log("save response: ", sanData);
-    } catch (err) {
-      console.log(err);
+      const payload = {
+        notes: notes,
+        id: noteId,
+        userId: localStorage.getItem("userId"),
+      };
+      // console.log("Saving:", payload);
+      try {
+        const response = await saveNotes(payload);
+        if (response) {
+          if (!guestMode) {
+            const sanData = await response.json();
+            if (sanData.answer === "FAILED") {
+              toggleAlert("Failed to save, check your tags", true);
+            } else {
+              toggleAlert("Saved Successfully", true);
+              toggleNoteList();
+            }
+          }
+          if (guestMode) {
+            if (response.answer === "FAILED") {
+              toggleAlert("Failed to save, check your tags", true);
+            } else {
+              toggleAlert("Saved Successfully", true);
+              toggleNoteList();
+            }
+          }
+        }
+        // console.log("save response: ", sanData);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
   async function addNote(e: any) {
     e.preventDefault();
-    const skeleton = {
-      question: "TEST",
-      answer: "",
-      link: "",
-      tag: "",
-      id: "",
-    };
-    const payload = {
-      notes: skeleton,
-      id: noteId,
-      userId: localStorage.getItem("userId"),
-    };
-    setData((prevData: any) => {
-      const updatedData = [...prevData, skeleton];
-      console.log(updatedData);
-      return updatedData;
-    });
+
+    if (noteId === "" || noteId === undefined) {
+      return;
+    } else {
+      let skeleton;
+      if (guestMode) {
+        skeleton = {
+          question: "",
+          answer: "",
+          link: "",
+          tag: "",
+          id: uuid(),
+          createdAt: new Date(),
+          score: 0,
+        };
+      } else {
+        skeleton = {
+          question: "",
+          answer: "",
+          link: "",
+          tag: "",
+          id: "",
+        };
+      }
+
+      let payload;
+      if (!guestMode) {
+        payload = {
+          notes: skeleton,
+          id: noteId,
+          userId: localStorage.getItem("userId"),
+        };
+      } else {
+        payload = {
+          notes: skeleton,
+          id: noteId,
+        };
+      }
+
+      setData((prevData: any) => {
+        const updatedData = [...prevData, skeleton];
+        return updatedData;
+      });
+    }
   }
 
   return (
     <>
       <div className="NoteArea">
-        <div className="sticky top-0">
+        <div className="sticky top-0 z-30">
           <PageHeader
             title="Dashboard"
             href="/"
@@ -108,7 +181,7 @@ export const NoteList = ({
           onSubmit={handleSubmit}
         >
           <ul className="w-full px-0 md:px-11">
-            {Object.keys(data).map((key) => (
+            {Object.keys(data).map((key, index) => (
               <li key={key}>
                 <Note
                   Content={data[key]}

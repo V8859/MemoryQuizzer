@@ -8,6 +8,7 @@ type Props = {
   userName?: string | null | undefined;
   title2?: string;
   href2?: string;
+  children?: React.ReactNode;
 };
 
 const PageHeader = (props: Props) => {

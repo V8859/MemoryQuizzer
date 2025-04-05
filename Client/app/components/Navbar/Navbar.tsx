@@ -15,6 +15,8 @@ import { ToggleThemeButton } from "./ToggleThemeButton";
 import UserInfo from "./UserInfo";
 import SetUserId from "./SetUserId";
 import getUserOrCreate from "@/app/scripts/login";
+import { getGuestMode, setGuestMode } from "@/app/GuestMode/GuestMode";
+import SetGuestMode from "@/app/components/Navbar/SetGuestMode";
 interface SidebarContextProps {
   expanded: boolean;
 }
@@ -36,6 +38,7 @@ export const Sidebar = async ({}) => {
     session?.user?.email,
     session
   );
+  const guestMode = await getGuestMode();
 
   return (
     <div className="h-full item-center sticky NavbarTransitionStyle">
@@ -51,26 +54,43 @@ export const Sidebar = async ({}) => {
             <SidebarItem icon={SVG.Decks} text={"Decks"} link={"/Decks"} />
             <SidebarItem icon={SVG.Play} text={"Play"} link={"/Play"} />
           </ul>
-
           <div className="flex flex-col justify-center items-center relative">
-            {session && session?.user ? (
+            {(session && session?.user) || guestMode ? (
               <>
-                <SetUserId userId={userId}></SetUserId>
+                {session && session?.user ? (
+                  <form
+                    className="w-full mx-1 object-center justify-center flex"
+                    action={async () => {
+                      "use server";
+                      if (session) {
+                        await signOut({ redirectTo: "/" });
+                      }
+                    }}
+                  >
+                    <SetUserId userId={userId}></SetUserId>
 
-                <form
-                  className="w-full mx-1 object-center justify-center flex"
-                  action={async () => {
-                    "use server";
-                    await signOut({ redirectTo: "/" });
-                  }}
-                >
-                  <CustomButton
-                    text="Logout"
-                    icon={<LogOut></LogOut>}
-                    tooltipText="Logout"
-                    type="submit"
-                  ></CustomButton>
-                </form>
+                    <CustomButton
+                      text="Logout"
+                      icon={<LogOut></LogOut>}
+                      tooltipText="Logout"
+                      type="submit"
+                    ></CustomButton>
+                  </form>
+                ) : (
+                  <form
+                    action={async () => {
+                      "use server";
+                      await setGuestMode(false);
+                    }}
+                  >
+                    <CustomButton
+                      text="Logout"
+                      icon={<LogOut></LogOut>}
+                      tooltipText="Logout"
+                      type="submit"
+                    ></CustomButton>
+                  </form>
+                )}
               </>
             ) : (
               <>
@@ -93,6 +113,7 @@ export const Sidebar = async ({}) => {
                     icon={<LogIn />}
                     tooltipText="Login"
                     type="submit"
+                    disabled={false}
                   ></CustomButton>
                 </form>
               </>
@@ -101,14 +122,27 @@ export const Sidebar = async ({}) => {
             <div className="flex items-center mb-5">
               <span className="mx-2 text-gray-500">or</span>
             </div>
-            {session && session?.user ? (
+            {(session && session?.user) || guestMode ? (
               ""
             ) : (
-              <CustomButton
-                text="Continue as Guest"
-                icon={<UserRoundSearch />}
-                tooltipText="Continue as Guest"
-              ></CustomButton>
+              <form
+                className="w-full mx-1 object-center justify-center flex"
+                action={async () => {
+                  "use server";
+                  await setGuestMode(true);
+                }}
+              >
+                <CustomButton
+                  text="Continue as Guest"
+                  icon={<UserRoundSearch />}
+                  tooltipText="Continue as Guest"
+                ></CustomButton>
+              </form>
+            )}
+            {guestMode ? (
+              <SetGuestMode guest={true}></SetGuestMode>
+            ) : (
+              <SetGuestMode guest={false}></SetGuestMode>
             )}
 
             <ToggleThemeButton icon={<Palette />}></ToggleThemeButton>
@@ -116,7 +150,7 @@ export const Sidebar = async ({}) => {
               <UserInfo session={session}></UserInfo>
             ) : (
               <>
-                <SetUserId userId={"0"}></SetUserId>
+                <SetUserId userId={null}></SetUserId>
               </>
             )}
           </div>

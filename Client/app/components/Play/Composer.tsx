@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import SelectPage from "./SelectPage/SelectPage";
 import PlayPage from "./PlayPage/PlayPage";
 import PageHeader from "../PageHeader";
+import Alert from "../Alert";
+import { useData } from "@/app/context/DataContext";
 
 type Props = {};
 

@@ -1,4 +1,5 @@
 "use client";
+import { useTheme } from "@/app/context/ThemeContext";
 import { renameNotebook } from "@/app/scripts/notebook";
 import { Check, PenIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ const NotebookName = ({
 
   const [inputMode, setInputMode] = useState(true);
   const [value, setValue] = useState(notebookName);
+  const { setNotebooksChanged } = useTheme();
   const handleChange = (e: any) => {
     setValue(e.target.value);
   };
@@ -30,7 +32,8 @@ const NotebookName = ({
     };
     const response = await renameNotebook(payload);
     if (response === "success") {
-      setNotebooks([]);
+      console.log("SO IT WORKED?");
+      setNotebooksChanged((prev: number) => prev + 1);
     } else {
       console.error("Notebook rename failed");
     }
@@ -43,6 +46,7 @@ const NotebookName = ({
         <input
           className="w-[80%] outline-none bg-orange-300/100 rounded px-1 items-center text-red-950"
           value={value}
+          maxLength={20}
           onChange={handleChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") {

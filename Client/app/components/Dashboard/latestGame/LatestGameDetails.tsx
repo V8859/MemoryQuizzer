@@ -2,6 +2,7 @@ import React from "react";
 import Cell from "./Cell";
 import Head from "./Head";
 import Row from "./Row";
+import { guestMode } from "@/app/context/DataContext";
 
 type Props = {
   data: any;
@@ -44,8 +45,12 @@ const LatestGameDetails = (props: Props) => {
                     return (
                       <Row
                         key={key}
-                        name={item.deckName}
-                        score={item.score + "/" + item.noOfCards}
+                        name={guestMode ? item.nameOfDeck : item.deckName}
+                        score={
+                          guestMode
+                            ? `${item.gameScore}/${item.noOfCards}`
+                            : `${item.score}/${item.noOfCards}`
+                        }
                         date={adate}
                       ></Row>
                     );

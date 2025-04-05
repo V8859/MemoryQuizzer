@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useScreenSize } from "../components/CustomHooks/useScreenSize";
 import { getNotebooks } from "../scripts/notebook";
+import { guestMode, useData } from "./DataContext";
 interface ThemeContextProps {
   theme: string;
   toggleTheme: () => void;
@@ -9,6 +10,8 @@ interface ThemeContextProps {
   toggleCollapse: () => void;
   setNotebooks: Function;
   notebooks: any;
+  notebooksChanged: number;
+  setNotebooksChanged: any;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -19,14 +22,18 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState("light");
   const [expanded, setExpanded] = useState(false);
   const [notebooks, setNotebooks] = useState([]);
+  const [notebooksChanged, setNotebooksChanged] = useState(Number);
   const screenSize = useScreenSize();
   const toggleTheme = () => {
     setTheme((prevTheme) => {
       if (prevTheme === "light") {
+        localStorage.setItem("theme", "dark");
         return "dark";
       } else if (prevTheme === "dark") {
+        localStorage.setItem("theme", "original");
         return "original";
       } else {
+        localStorage.setItem("theme", "light");
         return "light";
       }
     });
@@ -49,16 +56,33 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [theme]);
 
   useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme) {
+      setTheme(storedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchNotebooks = async () => {
-      const userId = localStorage.getItem("userId");
-      let response;
-      if (userId) {
+      let response = null;
+      let userId = null;
+      if (!guestMode) {
+        userId = localStorage.getItem("userId");
+      }
+
+      if (!guestMode && userId !== "0") {
         response = await getNotebooks(userId);
       }
-      setNotebooks(response);
+      if (guestMode) {
+        response = await getNotebooks();
+      }
+      if (response) {
+        setNotebooks(response);
+      }
     };
     fetchNotebooks();
-  }, [notebooks]);
+    console.log("REFETCH NOTEBOOKS");
+  }, [notebooksChanged]);
   return (
     <ThemeContext.Provider
       value={{
@@ -68,6 +92,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         toggleCollapse,
         setNotebooks,
         notebooks,
+        setNotebooksChanged,
+        notebooksChanged,
       }}
     >
       {children}

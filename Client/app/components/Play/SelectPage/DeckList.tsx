@@ -3,6 +3,7 @@
 import { getNotebooksForPlay } from "@/app/scripts/notebook";
 import React, { useEffect, useState } from "react";
 import PlayCard from "./PlayCard";
+import { guestMode } from "@/app/context/DataContext";
 
 type Props = {
   searchTerm: string;
@@ -21,19 +22,28 @@ const DeckList = (props: Props) => {
   useEffect(() => {
     const fetchNotebooks = async () => {
       const userId = localStorage.getItem("userId");
-      if (userId) {
+      if (userId && !guestMode) {
         const books = await getNotebooksForPlay(userId);
-        console.log(books);
+        // console.log(books);
         props.setDecks(books.books);
-        console.log(books.hidden);
+        // console.log(books.hidden);
+        props.setWarning(books.hidden);
+        console.log("NO");
+      }
+      if (guestMode) {
+        const books = await getNotebooksForPlay();
+        props.setDecks(books.books);
         props.setWarning(books.hidden);
       }
     };
     fetchNotebooks();
   }, [props.playMode]);
-  const filteredDecks = props.decks.filter((ele: any) =>
-    ele.name.toLowerCase().includes(props.searchTerm.toLowerCase())
-  );
+  let filteredDecks = [];
+  if (props.decks) {
+    filteredDecks = props.decks.filter((ele: any) =>
+      ele.name.toLowerCase().includes(props.searchTerm.toLowerCase())
+    );
+  }
 
   return (
     <div className="flex flex-wrap gap-6 items-center justify-center pb-1">

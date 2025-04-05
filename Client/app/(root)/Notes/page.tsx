@@ -9,17 +9,9 @@ const page = async () => {
   const session = await auth();
 
   return (
-    <>
-      {session && session?.user ? (
-        <>
-          <div className="h-screen">
-            <Composer></Composer>
-          </div>
-        </>
-      ) : (
-        <NoLogin></NoLogin>
-      )}
-    </>
+    <div className="h-screen">
+      <Composer></Composer>
+    </div>
   );
 };
 export default page;

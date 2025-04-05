@@ -29,6 +29,7 @@ const FlashCarousel = ({
       setFlipped(true);
     }
     const setter = async () => {
+      console.log("CHILDREN", children);
       let op = getOptions(curr, children);
       setOptions(op);
     };
@@ -70,6 +71,7 @@ const FlashCarousel = ({
       if (choice.notebookId in newData) {
         newData[choice.notebookId] -= 1;
       } else {
+        console.log(choice.notebookId);
         newData[choice.notebookId] = -1;
       }
       return newData;
@@ -79,7 +81,7 @@ const FlashCarousel = ({
   const handeChoice = (choice: any, key: any) => {
     if (curr < children.length) {
       if (children[curr] == choice) {
-        console.log(noteData);
+        console.log("NotebookID", choice.notebookId);
         setCorrect("bg-green-400 rounded-xl");
         setGameScore(gameScore + 1);
         handleIncrements(children[curr]);
@@ -233,10 +235,10 @@ const FlashCarousel = ({
         <div className="flex items-center justify-center w-full">
           <div className="flex flex-col font-[Consolas] gap-4 text-2xl items-center justify-center">
             <h1>Results</h1>
-            <h1 className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4">
               <h1>{message}</h1>
               <h1>You got {gameScore + "/" + children.length} correct</h1>
-            </h1>
+            </div>
           </div>
         </div>
       )}

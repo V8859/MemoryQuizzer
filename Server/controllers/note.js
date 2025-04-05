@@ -39,7 +39,7 @@ saveNotes = async (req, res) => {
   if (check) {
     res.json(rezponze);
   } else {
-    res.json({ message: "failed" });
+    res.json({ answer: "FAILED" });
   }
 };
 

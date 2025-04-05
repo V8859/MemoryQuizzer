@@ -6,14 +6,8 @@ import React from "react";
 const page = async () => {
   const session = await auth();
   return (
-    <div>
-      {session && session?.user ? (
-        <div className="h-screen">
-          <Composer />
-        </div>
-      ) : (
-        <NoLogin></NoLogin>
-      )}
+    <div className="h-screen">
+      <Composer />
     </div>
   );
 };

@@ -4,12 +4,12 @@ import NoteList from "./NoteList";
 import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
 import { useTheme } from "@/app/context/ThemeContext";
+import { guestMode, useData } from "@/app/context/DataContext";
 
 export const Composer = () => {
   const [noteId, setNoteId] = useState();
   const [payload, setPayload] = useState();
-  const { notebooks, setNotebooks } = useTheme();
-  const [notes, setNotes] = useState([]);
+  const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
   return (
@@ -17,6 +17,7 @@ export const Composer = () => {
       {modal ? (
         <DeleteConfirmation
           setModal={setModal}
+          setNotebooksChanged={setNotebooksChanged}
           setChange={setNotebooks}
           setNotebookName={setNotebookName}
           payload={payload}
@@ -27,8 +28,6 @@ export const Composer = () => {
             notebookName={notebookName}
             setNobookName={setNotebookName}
             noteId={noteId}
-            data={notes}
-            setData={setNotes}
           ></NoteList>
           <Notebooks
             setModal={setModal}
@@ -49,12 +48,15 @@ const DeleteConfirmation = ({
   setChange,
   setNotebookName,
   payload,
+  setNotebooksChanged,
 }: {
   setModal: Function;
   setChange: Function;
   setNotebookName: Function;
+  setNotebooksChanged: Function;
   payload: any;
 }) => {
+  const { noteListFlag, toggleNoteList } = useData();
   return (
     <div className="w-full top-0 left-0 h-full fixed z-50 bg-gray-900 opacity-75 overflow-hidden">
       <div className="w-full h-full flex items-center justify-center">
@@ -77,11 +79,21 @@ const DeleteConfirmation = ({
               onClick={async () => {
                 setModal(false);
                 try {
-                  const response = await deleteNotebook(payload);
-                  const checker = await response.json();
+                  let response;
+                  let checker;
+                  if (!guestMode) {
+                    response = await deleteNotebook(payload);
+                    checker = await response.json();
+                  } else {
+                    response = await deleteNotebook(payload);
+                    checker = response.message;
+                  }
+
                   if (checker === "success") {
                     setChange([]);
                     setNotebookName("SELECT NOTEBOOK");
+                    toggleNoteList();
+                    setNotebooksChanged((prevChange: number) => prevChange + 1);
                   } else {
                     setChange((prevChange: number) => prevChange + 1);
                   }

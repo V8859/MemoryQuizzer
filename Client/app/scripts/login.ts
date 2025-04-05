@@ -1,4 +1,7 @@
+import { auth } from "@/auth";
+
 async function getUserOrCreate(name: any, email: any, session: any) {
+  const sesion = await auth();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const payload = {
     name: name,
@@ -19,4 +22,5 @@ async function getUserOrCreate(name: any, email: any, session: any) {
     console.error("Error:", error);
   }
 }
+
 export default getUserOrCreate;

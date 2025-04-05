@@ -16,6 +16,7 @@ const SelectPage = (props: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [warning, setWarning] = useState(false);
   const [warning2, setCloseWarning] = useState(warning);
+
   return (
     <div className="flex h-full overflow-x-hidden">
       <div className="PlayCardArea overflow-x-hidden">

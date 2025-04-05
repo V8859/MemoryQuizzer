@@ -2,18 +2,16 @@ import { auth } from "@/auth";
 import Composer from "../components/Dashboard/Composer";
 import "../globals.css";
 import NoLogin from "../components/NoLogin";
+import { getGuestMode } from "../GuestMode/GuestMode";
 
 export default async function Home() {
-  const session = await auth();
+  const session: any = await auth();
+  const guestMode = await getGuestMode();
   return (
-    <div>
-      {session && session?.user ? (
-        <div className="h-screen">
-          <Composer userName={session.user.name} />
-        </div>
-      ) : (
-        <NoLogin></NoLogin>
-      )}
+    <div className="h-screen">
+      <Composer
+        userName={session ? session.user.name : guestMode ? "Guest" : ""}
+      />
     </div>
   );
 }

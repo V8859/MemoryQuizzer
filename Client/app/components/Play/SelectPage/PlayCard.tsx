@@ -1,5 +1,7 @@
+import { useData } from "@/app/context/DataContext";
 import { getPlayDeck } from "@/app/scripts/play";
 import React, { useState } from "react";
+import Alert from "../../Alert";
 
 type Props = {
   data: any;
@@ -10,6 +12,7 @@ type Props = {
 
 const PlayCard = (props: Props) => {
   const [details, setDetails] = useState(false);
+  const { toggleAlert } = useData();
   const handeDetails = (answer: boolean) => {
     setDetails(answer);
   };
@@ -21,15 +24,21 @@ const PlayCard = (props: Props) => {
       onClick={async () => {
         // console.log(props.data);
 
-        const entries = props.data.notes;
+        const entries = Object.values(props.data.notes);
         props.setDeckName(props.data.name);
         const sortedEntries = entries.sort(
           (a: any, b: any) => new Date(a.createdAt) - new Date(b.createdAt)
         );
         const id = sortedEntries[0].id;
         const playDeck = await getPlayDeck(id);
-        props.setPlayMode(true);
+        if (playDeck.length > 3) {
+          props.setPlayMode(true);
+        } else {
+          toggleAlert("Only found 3 links, please modify your cards.", true);
+        }
+
         if (playDeck) {
+          console.log("PlayDeck", playDeck);
           props.setCards(playDeck);
         }
       }}
@@ -48,7 +57,6 @@ const PlayCard = (props: Props) => {
             <div className="flex flex-col">
               Created
               <span>
-                {" "}
                 {props.data.createdAt
                   .split("T")[0]
                   .split("-")
