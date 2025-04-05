@@ -13,12 +13,12 @@ const Alert = (props: Props) => {
 
   useEffect(() => {
     if (alertBool) {
-      setOpacity(20);
+      setOpacity(100);
     }
 
     const interval = 60;
     const steps = props.timing / interval;
-    const opacityChangePerstep = 5 / steps;
+    const opacityChangePerstep = 30 / steps;
     const fadeEffect = setInterval(() => {
       setOpacity((prevOpacity) => {
         if (prevOpacity > 0) {
@@ -34,7 +34,7 @@ const Alert = (props: Props) => {
   }, [props.timing, showAlert]);
 
   return (
-    <div className="fixed top-0 right-4 rounded m-5 w-[25%] z-40">
+    <div className="fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] z-40">
       <div
         className="rounded w-full"
         style={{
@@ -45,8 +45,10 @@ const Alert = (props: Props) => {
         }}
       >
         <div className="flex w-full">
-          <div className="flex gap-4 w-full">
-            <div className="pr-10 pl-[5px] py-[3px] w-full">{alertMessage}</div>
+          <div className="flex w-full">
+            <div className="md:pr-10 text-xs md:text-base pl-[5px] py-[3px] w-full">
+              {alertMessage}
+            </div>
             <button
               className="py-[3px] px-[10px] bg-white/20 items-center flex justify-start hover:bg-black/20"
               onClick={() => {
