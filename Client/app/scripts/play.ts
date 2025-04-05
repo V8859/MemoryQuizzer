@@ -68,7 +68,7 @@ async function saveGameScores(data: { gameResult: gameResult }) {
   }
 }
 
-async function getGameScores(data: never) {
+async function getGameScores(data: string | null) {
   if (guestMode) {
     const DB = await getDB();
     return DB?.gameScores;

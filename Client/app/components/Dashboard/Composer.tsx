@@ -20,7 +20,9 @@ const Composer = (props: Props) => {
     const getScores = async () => {
       const id = localStorage.getItem("userId");
       try {
-        const gameData = await getGameScores(id);
+        if (id) {
+          const gameData = await getGameScores(id);
+        }
         const updateData: updateData = { details: gameData };
         if (updateData.details.error) {
           setData(null);
