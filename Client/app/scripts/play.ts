@@ -35,7 +35,7 @@ async function getPlayDeck(id: string) {
     playDeck.push(firstNote);
     const visited = new Set();
     visited[firstNote.tag] = firstNote.tag;
-    playDeck = findNextCard(allNotes, firstNote.tag, playDeck, visited);
+    findNextCard(allNotes, firstNote.tag, playDeck, visited);
     console.log(playDeck);
     return playDeck;
   }
@@ -96,6 +96,7 @@ function findNextCard(
   if (notez.length <= 0) {
     return;
   }
+
   let minScore = notez[0].score;
   notez.forEach((element) => {
     if (element.score < minScore) {
@@ -104,7 +105,6 @@ function findNextCard(
   });
 
   notez = notez.filter((element) => element.score === minScore);
-
   const next = selectCardFromList(notez);
   if (next.tag in visited) {
     return;
