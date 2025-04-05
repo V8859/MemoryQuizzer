@@ -195,10 +195,20 @@ export const NoteList = ({
         <form id="AddingForm" onSubmit={addNote} method="post"></form>
         <div className="flex flex-col items-center">
           <div className="flex gap-4">
-            <button form="AddingForm" className="NoteButtons" type="submit">
+            <button
+              title="Add"
+              form="AddingForm"
+              className="NoteButtons"
+              type="submit"
+            >
               <CirclePlus></CirclePlus>
             </button>
-            <button className="NoteButtons" form="SavingForm" type="submit">
+            <button
+              title="Save"
+              className="NoteButtons"
+              form="SavingForm"
+              type="submit"
+            >
               <Save></Save>
             </button>
           </div>
