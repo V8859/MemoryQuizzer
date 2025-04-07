@@ -8,16 +8,11 @@ import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
 import { guestMode, useData } from "@/app/context/DataContext";
 import { v4 as uuid } from "uuid";
-type NoteType = {
-  id: string;
-  createdAt?: string | Date;
-  score?: number;
-  notebookId?: string;
-  question: string;
-  answer: string;
-  tag: string;
+import { NoteObject } from "@/app/Types/NoteTypes";
+
+type NotesIterator = {
+  [noteId: string]: NoteObject;
 };
-type Notes = Record<string, NoteType>;
 
 export const NoteList = ({
   noteId,
@@ -27,8 +22,8 @@ export const NoteList = ({
   setData,
 }: {
   refetch: boolean;
-  data: NoteType[];
-  setData: React.Dispatch<SetStateAction<NoteType[]>>;
+  data: NoteObject[];
+  setData: React.Dispatch<SetStateAction<NoteObject[]>>;
   noteId: string | undefined;
   notebookName: string;
   setNobookName: React.Dispatch<SetStateAction<string>>;
@@ -72,25 +67,57 @@ export const NoteList = ({
       // Prevent the browser from reloading the page
       const form = e.target as HTMLFormElement;
       const formData = new FormData(form);
-      const notes: Notes = {};
+      const notes: NotesIterator = {};
       for (const [key, value] of formData.entries()) {
-        console.log(key, value);
-        const [noteId, field]: string[] = key.split("_");
+        const [noteId, field] = key.split("_");
+        console.log(noteId, field);
         if (!notes[noteId]) {
-          notes[noteId] = {};
+          notes[noteId] = {
+            question: "",
+            answer: "",
+            tag: "",
+            id: "",
+            link: "",
+            score: 0,
+            createdAt: "",
+            notebookId: "",
+          };
         }
-        notes[noteId][field] = value;
+        if (
+          field === "question" ||
+          field === "answer" ||
+          field === "tag" ||
+          field === "link" ||
+          field === "notebookId"
+        ) {
+          notes[noteId][field] = String(value);
+        }
       }
-      for (const key in data) {
-        notes[key].id = data[key].id;
-        notes[key].score = data[key].score;
+      let Iterator = 0;
+      for (const key in notes) {
+        console.log(notes);
+        notes[key].id = data[Iterator].id;
+        notes[key].score = data[Iterator].score;
         if (guestMode) {
-          notes[key].createdAt = data[key].createdAt;
+          notes[key].createdAt = String(data[Iterator].createdAt);
           notes[key].notebookId = noteId;
         }
+        Iterator++;
       }
+      const notesArray: NoteObject[] = Object.values(notes).map((note) => {
+        return {
+          id: note.id as string,
+          question: note.question as string,
+          answer: note.answer as string,
+          tag: note.tag as string,
+          link: note.link as string,
+          score: note.score as number,
+          createdAt: note.createdAt as string,
+          notebookId: note.notebookId as string,
+        };
+      });
       const payload = {
-        notes: notes,
+        notes: notesArray,
         id: noteId,
         userId: localStorage.getItem("userId"),
       };
@@ -99,7 +126,7 @@ export const NoteList = ({
         const response = await saveNotes(payload);
         if (response) {
           if (!guestMode) {
-            const sanData = await response.json();
+            const sanData = response;
             if (sanData.answer === "FAILED") {
               toggleAlert("Failed to save, check your tags", true);
             } else {
@@ -136,6 +163,7 @@ export const NoteList = ({
           link: "",
           tag: "",
           id: uuid(),
+          notebookId: "",
           createdAt: new Date().toISOString(),
           score: 0,
         };
@@ -146,6 +174,9 @@ export const NoteList = ({
           link: "",
           tag: "",
           id: "",
+          notebookId: "",
+          createdAt: "",
+          score: 0,
         };
       }
 
@@ -163,7 +194,7 @@ export const NoteList = ({
       //   };
       // }
 
-      setData((prevData: NoteType[]) => {
+      setData((prevData: NoteObject[]) => {
         const updatedData = [...prevData, skeleton];
         return updatedData;
       });
@@ -197,12 +228,21 @@ export const NoteList = ({
           onSubmit={handleSubmit}
         >
           <ul className="w-full px-0 md:px-11">
-            {Object.keys(data).map((key) => (
+            {/* {Object.keys(data).map((key) => (
               <li key={key}>
                 <Note
                   Content={data[key]}
                   identifier={key}
                   noteId={data.id}
+                ></Note>
+              </li>
+            ))} */}
+            {data.map((note) => (
+              <li key={note.id}>
+                <Note
+                  Content={note}
+                  identifier={note.id}
+                  noteId={noteId}
                 ></Note>
               </li>
             ))}

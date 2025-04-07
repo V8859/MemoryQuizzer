@@ -1,9 +1,10 @@
 import React, { SetStateAction } from "react";
 import { ArrowLeftToLine } from "lucide-react";
 import FlashCarousel from "./PlayView/FlashCarousel";
+import { NoteObject } from "@/app/Types/NoteTypes";
 
 type Props = {
-  cards: [];
+  cards: NoteObject[];
   setPlayMode: React.Dispatch<SetStateAction<boolean>>;
   deckName: string;
   setDeckName: React.Dispatch<SetStateAction<string>>;

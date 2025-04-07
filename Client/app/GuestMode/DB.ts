@@ -1,12 +1,4 @@
-type DBType =
-  | {
-      notebooks: never[];
-      notes: never[];
-      gameScores: never[];
-    }
-  | undefined;
-
-type storedDataType = string | null;
+import { DBType, storedDataType } from "../Types/NoteTypes";
 
 export async function getDB() {
   const storedData: storedDataType = localStorage.getItem("DB");

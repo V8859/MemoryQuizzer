@@ -5,26 +5,19 @@ import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
 import { useTheme } from "@/app/context/ThemeContext";
 import { guestMode, useData } from "@/app/context/DataContext";
-type NoteType = {
-  id: string;
-  createdAt?: string | Date;
-  score?: number;
-  notebookId?: string;
-  question: string;
-  answer: string;
-  tag: string;
-};
+import { NoteObject } from "@/app/Types/NoteTypes";
+
 type payload = {
   id: string;
 };
 
 export const Composer = () => {
   const [noteId, setNoteId] = useState("");
-  const [payload, setPayload] = useState<payload | undefined>();
+  const [payload, setPayload] = useState<payload | undefined>(undefined);
   const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
-  const [data, setData] = useState<NoteType[]>([]);
+  const [data, setData] = useState<NoteObject[]>([]);
   const [refetch, setRefetch] = useState(Boolean);
   return (
     <div className="Composer md:flex-row">
@@ -35,6 +28,7 @@ export const Composer = () => {
           setNotebooksChanged={setNotebooksChanged}
           setChange={setNotebooks}
           setNotebookName={setNotebookName}
+          setData={setData}
           payload={payload}
         ></DeleteConfirmation>
       ) : (
@@ -71,13 +65,13 @@ const DeleteConfirmation = ({
 }: {
   SetRefetch: React.Dispatch<SetStateAction<boolean>>;
   setModal: (prev: boolean) => void;
-  setData: React.Dispatch<SetStateAction<never[]>>;
+  setData: React.Dispatch<SetStateAction<NoteObject[]>>;
   setChange: React.Dispatch<SetStateAction<never[]>>;
   setNotebookName: React.Dispatch<SetStateAction<string>>;
   setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
-  payload: payload;
+  payload?: payload;
 }) => {
-  const { toggleNoteList } = useData();
+  const { toggleNoteList, toggleAlert } = useData();
   return (
     <div className="w-full top-0 left-0 h-full fixed z-50 bg-gray-900 opacity-75 overflow-hidden">
       <div className="w-full h-full flex items-center justify-center">
@@ -104,11 +98,19 @@ const DeleteConfirmation = ({
                   let response;
                   let checker;
                   if (!guestMode) {
-                    response = await deleteNotebook(payload);
-                    checker = await response.json();
+                    if (payload) {
+                      response = await deleteNotebook(payload);
+                      checker = response;
+                    } else {
+                      toggleAlert("Failed to delete notebook");
+                    }
                   } else {
-                    response = await deleteNotebook(payload);
-                    checker = response.message;
+                    if (payload) {
+                      response = await deleteNotebook(payload);
+                      checker = response.message;
+                    } else {
+                      toggleAlert("Failed to delete notebook");
+                    }
                   }
 
                   if (checker === "success") {
@@ -118,7 +120,7 @@ const DeleteConfirmation = ({
                     toggleNoteList();
                     setNotebooksChanged((prevChange: number) => prevChange + 1);
                   } else {
-                    setChange((prevChange: number) => prevChange + 1);
+                    setChange([]);
                   }
                 } catch (err) {
                   console.log(err);

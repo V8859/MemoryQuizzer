@@ -17,7 +17,7 @@ const Note = ({
   Content,
   identifier,
 }: {
-  noteId: string;
+  noteId: string | undefined;
   Content: content;
   identifier: string;
 }) => {

@@ -4,14 +4,21 @@ import Row from "./Row";
 import { guestMode } from "@/app/context/DataContext";
 
 type Props = {
-  data: [item];
+  data: updateData;
 };
 
-type item = {
+type game = {
   date: string;
+  gameScore: number | string;
+  nameOfDeck: string;
+  noOfCards: number | string;
   deckName: string;
   score: number;
-  noOfCards: number;
+};
+
+type gameData = { error?: boolean } | game[];
+type updateData = {
+  details: gameData;
 };
 
 const LatestGameDetails = (props: Props) => {
@@ -35,9 +42,10 @@ const LatestGameDetails = (props: Props) => {
               <Head title={"Date"}></Head>
             </div>
             <div className="flex flex-col text-white/90 text-md">
-              {data.details.error
+              {"error" in (data?.details || {})
                 ? ""
-                : data.details.map((item: item, key: number | string) => {
+                : Array.isArray(data?.details) &&
+                  data?.details.map((item: game, key: number | string) => {
                     const adate = new Date(
                       item.date.split("T")[0]
                     ).toLocaleDateString();

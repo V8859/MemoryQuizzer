@@ -4,7 +4,7 @@ import { addNotebook } from "@/app/scripts/notebook";
 import React, { SetStateAction } from "react";
 import { useTheme } from "@/app/context/ThemeContext";
 import { v4 as uuidv4 } from "uuid";
-import { guestMode } from "@/app/context/DataContext";
+import { guestMode, useData } from "@/app/context/DataContext";
 type notebook = {
   id: string;
   name: string;
@@ -25,7 +25,7 @@ const Notebooks = ({
   notebooks: never[];
   setNotebookName: React.Dispatch<SetStateAction<string>>;
   setModal: (prev: boolean) => void;
-  setPayload: React.Dispatch<SetStateAction<payload>>;
+  setPayload: React.Dispatch<SetStateAction<payload | undefined>>;
 }) => {
   // useEffect(() => {
   //   if (guestMode) {
@@ -45,7 +45,7 @@ const Notebooks = ({
       <aside className="my-5 mx-1 rounded-xl items-center justify-center text-center md:text-left">
         <nav className="h-full flex flex-col items-center md:items-start justify-center">
           <>
-            <MyForm notebook={notebooks}></MyForm>
+            <MyForm></MyForm>
           </>
           <h1 className="md:w-[100%] w-[50%] pr-[40px] pl-2 text-lg basicHeaderColor rounded">
             Notebooks
@@ -66,6 +66,7 @@ const Notebooks = ({
                     >
                       {notebook.name}
                       <button
+                        title="deleteNotebook"
                         className="SizeChangeAnimation"
                         onClick={async () => {
                           const payload = {
@@ -103,32 +104,46 @@ type GuestModeResponse = {
   notebooks: [notebookF];
 };
 
+type NotebookObjectGuest = {
+  id: string;
+  name: string;
+  createdAt: string;
+  score: number;
+};
+
+type NotebookObjectServer = {
+  id: string;
+  name: string;
+};
+
 const MyForm = () => {
   const { setNotebooksChanged } = useTheme();
+  const { toggleAlert } = useData();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userId = localStorage.getItem("userId");
 
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    let userId;
     if (!guestMode) {
+      userId = localStorage.getItem("userId");
       if (!userId) {
         console.error("User ID not found in localStorage.");
         return;
       }
+      formData.append("id", userId);
     }
 
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    formData.append("id", userId); // Append user ID to the form data
-    let payload;
+    let payload: NotebookObjectGuest | NotebookObjectServer;
     if (!guestMode)
       payload = {
-        id: formData.get("id"),
-        name: formData.get("name"),
+        id: String(userId || ""),
+        name: String(formData.get("name") || ""),
       };
     else {
       payload = {
         id: uuidv4(),
-        name: formData.get("name"),
+        name: String(formData.get("name") || ""),
         createdAt: new Date().toISOString(),
         score: 0,
       };
@@ -137,24 +152,24 @@ const MyForm = () => {
     console.log(guestMode);
     if (formData.get("name"))
       try {
-        let data;
+        let data: { ok: boolean };
         if (guestMode) {
-          const response: GuestModeResponse = await addNotebook(payload);
-          data = response.notebooks;
+          const payloadGuest = payload as NotebookObjectGuest;
+          const response: GuestModeResponse = await addNotebook(payloadGuest);
+          data = response;
         } else {
+          const payloadServer = payload as NotebookObjectServer;
           const response: Response | NotebookResponse = await addNotebook(
-            payload
+            payloadServer
           );
           data = response;
         }
-        // console.log(data);
-        if (!(data === "failed")) {
-          // [...notebook, data];
-          // setNotebooks(check);
-          setNotebooksChanged((prev: number) => {
-            return prev + 1;
-          });
+        if (data.ok) {
+          setNotebooksChanged((prev: number) => (prev += 1));
+        } else {
+          toggleAlert("Failed to add notebook", true);
         }
+        // console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -172,10 +187,10 @@ const MyForm = () => {
           minLength={1}
           maxLength={20}
         />
-        <button type="submit">
+        <button title="AddNotebook" type="submit">
           <CirclePlus></CirclePlus>
         </button>
-        <button type="reset">
+        <button title="ResetNotebookInput" type="reset">
           <X></X>
         </button>
       </div>

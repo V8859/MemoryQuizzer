@@ -5,13 +5,6 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["lh3.googleusercontent.com"],
   },
-  experimental: {
-    turbo: {
-      rules: {
-        "*.svg": ["@svgr/webpack"],
-      },
-    },
-  },
 };
 
 export default nextConfig;

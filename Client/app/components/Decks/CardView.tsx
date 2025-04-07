@@ -5,9 +5,10 @@ import React, { useEffect, useState } from "react";
 import FlashCarousel from "./FlashCarousel";
 import { Filter } from "lucide-react";
 import FlashList from "./FlashList";
+import { NoteObject } from "@/app/Types/NoteTypes";
 
 const CardView = ({ notebookId }: { notebookId: string | undefined }) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<NoteObject[]>([]);
   const [view, setView] = useState(false);
 
   useEffect(() => {

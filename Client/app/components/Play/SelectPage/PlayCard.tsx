@@ -1,14 +1,12 @@
 import { useData } from "@/app/context/DataContext";
 import { getPlayDeck } from "@/app/scripts/play";
+import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
-  data: {
-    name: string;
-    notes: { [key: string]: Entries };
-  };
+  data: NotebookObject;
   setPlayMode: Dispatch<SetStateAction<boolean>>;
-  setCards: Dispatch<SetStateAction<never[]>>;
+  setCards: Dispatch<SetStateAction<NoteObject[]>>;
   setDeckName: Dispatch<SetStateAction<string>>;
 };
 type Entries = {
@@ -29,30 +27,32 @@ const PlayCard = (props: Props) => {
       onMouseLeave={() => handeDetails(false)}
       onClick={async () => {
         // console.log(props.data);
+        if (props.data.notes) {
+          const entries = Object.values(props.data.notes);
+          props.setDeckName(props.data.name);
+          if (entries.length > 0) {
+            const sortedEntries: Entries[] = entries.sort(
+              (a: Entries, b: Entries) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+            );
 
-        const entries = Object.values(props.data.notes);
-        props.setDeckName(props.data.name);
-        if (entries.length > 0) {
-          const sortedEntries: Entries[] = entries.sort(
-            (a: Entries, b: Entries) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
+            if (sortedEntries.length > 0) {
+              const id = sortedEntries[0].id;
+              const playDeck = await getPlayDeck(id);
+              if (playDeck.length > 3) {
+                props.setPlayMode(true);
+              } else {
+                toggleAlert(
+                  "Only found 3 links, please modify your cards.",
+                  true
+                );
+              }
 
-          if (sortedEntries.length > 0) {
-            const id = sortedEntries[0].id;
-            const playDeck = await getPlayDeck(id);
-            if (playDeck.length > 3) {
-              props.setPlayMode(true);
-            } else {
-              toggleAlert(
-                "Only found 3 links, please modify your cards.",
-                true
-              );
-            }
-
-            if (playDeck) {
-              console.log("PlayDeck", playDeck);
-              props.setCards(playDeck);
+              if (playDeck) {
+                console.log("PlayDeck", playDeck);
+                props.setCards(playDeck);
+              }
             }
           }
         }

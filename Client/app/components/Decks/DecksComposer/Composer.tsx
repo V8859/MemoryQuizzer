@@ -4,13 +4,15 @@ import DropDown from "../Dropdown";
 import CardView from "../CardView";
 import PageHeader from "../../PageHeader";
 
-type selectedOption = {
-  createdAt: string;
-  id: string;
-  label: string;
-  name: string;
-  score: number;
-};
+type selectedOption =
+  | {
+      createdAt: string;
+      id: string;
+      label: string;
+      name: string;
+      score: number;
+    }
+  | undefined;
 
 const Composer = () => {
   const [selectedOption, setSelectedOption] = useState<selectedOption>();

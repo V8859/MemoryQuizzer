@@ -1,6 +1,7 @@
 import Urls from "./urls";
 import { guestMode } from "../context/DataContext";
 import { getDB, updateDB } from "../GuestMode/DB";
+import { Note, NotebookObject, NoteObject } from "../Types/NoteTypes";
 
 async function getNotebooks(id?: string | null) {
   if (guestMode) {
@@ -11,7 +12,9 @@ async function getNotebooks(id?: string | null) {
   } else {
     //   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const url = new URL(Urls.getNotebooks);
-    url.searchParams.append("id", id);
+    if (id) {
+      url.searchParams.append("id", id);
+    }
 
     try {
       const response = await fetch(url.toString(), {
@@ -39,36 +42,44 @@ async function getNotebooksForPlay(id?: string) {
       hidden: boolean;
     } = { books: [], hidden: false };
     const DB = await getDB();
-    const notebooks = DB.notebooks ? DB.notebooks : [];
-    const notes = DB.notes;
-    notes.filter((element) => element?.notes.length > 3);
-    const correctIds = notebooksWithMinLength(4, notes);
-    if (correctIds.length !== notebooks.length) {
-      response.hidden = true;
-    }
-
-    const map = new Map(notes.map((item) => [item.id, item.notes]));
-
-    const filteredArray = Object.values(
-      JSON.parse(JSON.stringify(notebooks))
-    ).filter((item) => {
-      if (correctIds.includes(item.id)) {
-        return item;
+    if (DB) {
+      const notebooks: NotebookObject[] = DB.notebooks ? DB.notebooks : [];
+      const notes: Note[] = DB.notes;
+      notes.filter((element) => element?.notes.length > 3);
+      const correctIds = notebooksWithMinLength(4, notes);
+      if (correctIds.length !== notebooks.length) {
+        response.hidden = true;
       }
-    });
 
-    const mergedArray = filteredArray.map((item) => ({
-      ...item,
-      notes: map.get(item.id),
-    }));
+      const map = new Map(
+        notes.map((item: { id: string; notes: NoteObject[] }) => [
+          item.id,
+          item.notes,
+        ])
+      );
+      const filteredArray: NotebookObject[] = Object.values(
+        JSON.parse(JSON.stringify(notebooks)) as NotebookObject[]
+      ).filter((item) => {
+        if (correctIds.includes(item.id)) {
+          return item;
+        }
+      });
 
-    if (filteredArray) {
-      response.books = mergedArray;
+      const mergedArray = filteredArray.map((item) => ({
+        ...item,
+        notes: map.get(item.id),
+      }));
+
+      if (filteredArray) {
+        response.books = mergedArray;
+      }
+      return response;
     }
-    return response;
   } else {
     const url = new URL(Urls.getNotebooksForPlay);
-    url.searchParams.append("id", id);
+    if (id) {
+      url.searchParams.append("id", id);
+    }
 
     try {
       const response = await fetch(url.toString(), {
@@ -90,19 +101,34 @@ async function getNotebooksForPlay(id?: string) {
   }
 }
 
-async function addNotebook(payload: never) {
+type NotebookObjectGuest = {
+  id: string;
+  name: string;
+  createdAt: string;
+  score: number;
+};
+
+type NotebookObjectServer = {
+  id: string;
+  name: string;
+};
+async function addNotebook(
+  payload: NotebookObjectGuest | NotebookObjectServer
+) {
   if (guestMode) {
     const DB = await getDB();
+    const payloadGuest = payload as NotebookObjectGuest;
     if (DB) {
-      DB.notebooks.push(payload);
+      DB.notebooks.push(payloadGuest);
       await updateDB(DB);
       return { ok: true, notebooks: DB.notebooks };
     }
   } else {
+    const payloadServer = payload as NotebookObjectServer;
     const response = await fetch(Urls.addNotebook, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payloadServer),
     });
     const rez = await response.json();
     return rez;
@@ -116,7 +142,8 @@ async function deleteNotebook(payload: { id: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    return response;
+    const res = await response.json();
+    return res;
   } else {
     const DB = await getDB();
     if (DB) {
@@ -134,7 +161,10 @@ async function deleteNotebook(payload: { id: string }) {
   }
 }
 
-async function renameNotebook(payload: { name: string; id: string }) {
+async function renameNotebook(payload: {
+  name: string;
+  id: string | undefined;
+}) {
   if (guestMode) {
     const DB = await getDB();
     DB?.notebooks.forEach((element: { id: string; name: string }) => {
@@ -153,6 +183,7 @@ async function renameNotebook(payload: { name: string; id: string }) {
 }
 type notes = {
   id: string;
+  notes: NoteObject[];
 };
 
 function notebooksWithMinLength(length: number, notes: notes[]) {

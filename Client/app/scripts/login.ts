@@ -1,7 +1,9 @@
+import { Session } from "next-auth";
+
 async function getUserOrCreate(
-  name: string,
-  email: string,
-  session: null | object
+  name: string | undefined | null,
+  email: string | undefined | null,
+  session: Session | null
 ) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const payload = {

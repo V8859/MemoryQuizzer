@@ -11,7 +11,7 @@ type Props = {
   toggleNoteList: () => void;
   showAlert: boolean;
   alertMessage: string;
-  toggleAlert: (message: string, showIT: string) => void;
+  toggleAlert: (message: string, showIT?: boolean) => void;
   alertBool: boolean;
 };
 
@@ -20,7 +20,7 @@ const DataContext = createContext<Props | undefined>(undefined);
 export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [noteListFlag, setNoteListFlag] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertBool, setAlertBool] = useState(false);
+  const [alertBool, setAlertBool] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState("");
 
   const toggleNoteList = () => {

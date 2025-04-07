@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import SelectPage from "./SelectPage/SelectPage";
 import PlayPage from "./PlayPage/PlayPage";
 import PageHeader from "../PageHeader";
+import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 
 const Composer = () => {
   const [playMode, setPlayMode] = useState(false);
-  const [cards, setCards] = useState([]);
-  const [decks, setDecks] = useState([]);
+  const [cards, setCards] = useState<NoteObject[]>([]);
+  const [decks, setDecks] = useState<NotebookObject[]>([]);
   const [deckName, setDeckName] = useState("Select Deck");
   return (
     <div className="Composer">

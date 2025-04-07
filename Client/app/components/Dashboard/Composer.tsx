@@ -7,9 +7,17 @@ import PageHeader from "../PageHeader";
 type Props = {
   userName: string | undefined | null;
 };
-type gameData = {
-  error: boolean;
+
+type game = {
+  date: string;
+  score: number;
+  deckName: string;
+  gameScore: number | string;
+  nameOfDeck: string;
+  noOfCards: number | string;
 };
+
+type gameData = { error?: boolean } | game[];
 type updateData = {
   details: gameData;
 };
@@ -22,13 +30,26 @@ const Composer = (props: Props) => {
       try {
         if (id) {
           const gameData = await getGameScores(id);
-        }
-        const updateData: updateData = { details: gameData };
-        if (updateData.details.error) {
-          setData(null);
+          console.log(gameData);
+          const updateData: updateData = { details: gameData };
+          if ("error" in updateData.details) {
+            if (updateData.details.error) {
+              setData(null);
+            }
+          } else {
+            setData(updateData);
+            console.log("UPDATE DATA", updateData);
+          }
         } else {
-          setData(updateData);
-          console.log("UPDATE DATA", updateData);
+          const gameData = await getGameScores("some");
+          const updateData: updateData = { details: gameData };
+          if ("error" in updateData.details) {
+            if (updateData.details.error) {
+              setData(null);
+            }
+          } else {
+            setData(updateData);
+          }
         }
       } catch (err) {
         console.error("ERROR FETCHING GAME SCORES:", err);

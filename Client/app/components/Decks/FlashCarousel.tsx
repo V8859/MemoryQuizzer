@@ -2,14 +2,10 @@
 import { useState } from "react";
 import { FlashCard } from "./Flashcard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { NoteObject } from "@/app/Types/NoteTypes";
 
-type element = {
-  id: string;
-  question: string;
-  answer: string;
-};
 interface Props {
-  data: [element] | never[];
+  data: NoteObject[];
 }
 
 const FlashCarousel = (props: Props) => {

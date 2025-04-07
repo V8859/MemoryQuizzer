@@ -4,15 +4,16 @@ import { getNotebooksForPlay } from "@/app/scripts/notebook";
 import React, { SetStateAction, useEffect } from "react";
 import PlayCard from "./PlayCard";
 import { guestMode } from "@/app/context/DataContext";
+import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 
 type Props = {
   searchTerm: string;
   setWarning: React.Dispatch<SetStateAction<boolean>>;
   setPlayMode: React.Dispatch<SetStateAction<boolean>>;
-  setCards: React.Dispatch<SetStateAction<never[]>>;
+  setCards: React.Dispatch<SetStateAction<NoteObject[]>>;
   playMode: boolean;
-  decks: never[];
-  setDecks: React.Dispatch<SetStateAction<never[]>>;
+  decks: NotebookObject[];
+  setDecks: React.Dispatch<SetStateAction<NotebookObject[]>>;
   setDeckName: React.Dispatch<SetStateAction<string>>;
 };
 
@@ -27,7 +28,7 @@ const DeckList = (props: Props) => {
         setDecks(books.books);
         // console.log(books.hidden);
         setWarning(books.hidden);
-        console.log("NO");
+        // console.log("NO");
       }
       if (guestMode) {
         const books = await getNotebooksForPlay();
@@ -37,16 +38,16 @@ const DeckList = (props: Props) => {
     };
     fetchNotebooks();
   }, [playMode, setWarning, setDecks]);
-  let filteredDecks = [];
+  let filteredDecks: NotebookObject[] = [];
   if (decks) {
-    filteredDecks = props.decks.filter((ele: { name: string }) =>
+    filteredDecks = props.decks.filter((ele) =>
       ele.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
   return (
     <div className="flex flex-wrap gap-6 items-center justify-center pb-1">
-      {filteredDecks.map((ele: { id: string }) => (
+      {filteredDecks.map((ele) => (
         <div key={ele.id}>
           {
             <PlayCard

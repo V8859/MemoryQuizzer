@@ -3,33 +3,24 @@ import { useEffect, useState } from "react";
 import { Card } from "../Card";
 import { ChevronRight } from "lucide-react";
 import { saveGameScores } from "@/app/scripts/play";
-
-type NoteType = {
-  id: string;
-  createdAt?: string | Date;
-  score: number;
-  notebookId?: string;
-  question: string;
-  answer: string;
-  tag: string;
-};
+import { NotebookData, NoteObject } from "@/app/Types/NoteTypes";
 
 type Choice = {
   id: string;
-  notebookId: string;
+  notebookId?: string;
 };
 
 const FlashCarousel = ({
   cards,
   deckName,
 }: {
-  cards: NoteType[];
-  deckName: string | null;
+  cards: NoteObject[];
+  deckName: string;
 }) => {
   const [curr, setCurr] = useState(0);
   const [animationClass, setAnimationClass] = useState("");
   const [isflipped, setFlipped] = useState(false);
-  const [options, setOptions] = useState<NoteType[]>([]);
+  const [options, setOptions] = useState<NoteObject[]>([]);
   const [correct, setCorrect] = useState("");
   const [correctKey, setCorrectKey] = useState<string | number>();
   const [disabled, setDisabled] = useState(false);
@@ -37,7 +28,7 @@ const FlashCarousel = ({
   const [gameScore, setGameScore] = useState(Number);
   const [message, setMessage] = useState("");
   const [noteData, setNoteData] = useState<{ [key: string]: number }>({});
-  const [notebookData, setNotebookData] = useState<{ [key: string]: number }>();
+  const [notebookData, setNotebookData] = useState<NotebookData>({});
   useEffect(() => {
     if (curr == cards.length) {
       setDisabled(true);
@@ -63,10 +54,13 @@ const FlashCarousel = ({
     });
     setNotebookData((prevData) => {
       const newData = { ...prevData };
-      if (choice.notebookId in newData) {
-        newData[choice.notebookId] += 1;
-      } else {
-        newData[choice.notebookId] = 1;
+      if ("notebookId" in choice) {
+        if (choice.notebookId)
+          if (choice.notebookId in newData) {
+            newData[choice.notebookId] += 1;
+          } else {
+            newData[choice.notebookId] = 1;
+          }
       }
       return newData;
     });
@@ -83,12 +77,16 @@ const FlashCarousel = ({
     });
     setNotebookData((oldData) => {
       const newData = { ...oldData };
-      if (choice.notebookId in newData) {
-        newData[choice.notebookId] -= 1;
-      } else {
-        console.log(choice.notebookId);
-        newData[choice.notebookId] = -1;
+      if ("notebookId" in choice) {
+        if (choice.notebookId)
+          if (choice.notebookId in newData) {
+            newData[choice.notebookId] -= 1;
+          } else {
+            console.log(choice.notebookId);
+            newData[choice.notebookId] = -1;
+          }
       }
+
       return newData;
     });
   };
@@ -99,6 +97,7 @@ const FlashCarousel = ({
         console.log("NotebookID", choice.notebookId);
         setCorrect("bg-green-400 rounded-xl");
         setGameScore(gameScore + 1);
+        console.log("CARD,", cards[curr]);
         handleIncrements(cards[curr]);
       } else {
         setCorrect("bg-red-400 rounded-xl");
@@ -125,6 +124,7 @@ const FlashCarousel = ({
         notes: { noteData },
         notebooks: { notebookData },
         gameResult: {
+          date: "",
           gameScore,
           id: cards[0].userId,
           nameOfDeck: deckName,
@@ -260,11 +260,11 @@ const FlashCarousel = ({
 
 export default FlashCarousel;
 
-function getOptions(currIndex: number, data: []) {
+function getOptions(currIndex: number, data: NoteObject[]) {
   const newData = data.slice();
   newData.splice(currIndex, 1);
   const options = [];
-  const used = [];
+  const used: number[] = [];
   options.push(data[currIndex]);
   let check = true;
   while (check) {
@@ -284,7 +284,7 @@ function getOptions(currIndex: number, data: []) {
 }
 
 // Fisher-Yates Algorithm // Courtesy of Bro Code
-function shuffle(array: never[]) {
+function shuffle(array: NoteObject[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const random = Math.floor(Math.random() * (i + 1));
     [array[i], array[random]] = [array[random], array[i]];

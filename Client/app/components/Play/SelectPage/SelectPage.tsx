@@ -2,13 +2,14 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import DeckList from "./DeckList";
 import DeckWarning from "./DeckWarning";
+import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 
 type Props = {
   setPlayMode: Dispatch<SetStateAction<boolean>>;
-  setCards: Dispatch<SetStateAction<never[]>>;
+  setCards: Dispatch<SetStateAction<NoteObject[]>>;
   playMode: boolean;
-  setDecks: Dispatch<SetStateAction<never[]>>;
-  decks: never[];
+  setDecks: Dispatch<SetStateAction<NotebookObject[]>>;
+  decks: NotebookObject[];
   setDeckName: Dispatch<SetStateAction<string>>;
 };
 

@@ -16,7 +16,7 @@ const addNotebook = async (req, res) => {
     },
   });
   if (notebook) {
-    res.json(notebook);
+    res.json({ ok: true, notebooks: notebook });
   }
 };
 

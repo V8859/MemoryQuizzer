@@ -154,7 +154,7 @@ export const Sidebar = async ({}) => {
               <UserInfo session={session}></UserInfo>
             ) : (
               <>
-                <SetUserId userId={null}></SetUserId>
+                <SetUserId remove={true} userId={null}></SetUserId>
               </>
             )}
           </div>

@@ -1,11 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "@/app/globals.css";
-import Select, { StylesConfig } from "react-select";
+import Select, {
+  // ActionMeta,
+  MultiValue,
+  SingleValue,
+  StylesConfig,
+} from "react-select";
 import chroma from "chroma-js";
 import { useTheme } from "@/app/context/ThemeContext";
 
-type selectedOption = {
+type selectedOption = ColourOption | undefined;
+
+type book = {
   createdAt: string;
   id: string;
   label: string;
@@ -37,6 +44,14 @@ const dot = () => ({
     width: 10,
   },
 });
+
+type ColourOption = {
+  createdAt: string;
+  label: string;
+  id: string;
+  name: string;
+  score: number;
+};
 
 const colourStyles: StylesConfig<ColourOption> = {
   control: (styles) => ({
@@ -94,25 +109,32 @@ const colourStyles: StylesConfig<ColourOption> = {
     };
   },
   input: (styles) => ({ ...styles, ...dot() }),
-  placeholder: (styles) => ({ ...styles, color: "white", ...dot("white") }),
+  placeholder: (styles) => ({ ...styles, color: "white", ...dot() }),
   singleValue: (styles, {}) => ({
     ...styles,
     color: "white",
-    ...dot("white"),
+    ...dot(),
   }),
 };
 const DropDown = (props: Props) => {
   const { selectedOption, setSelectedOption } = props;
   const { notebooks } = useTheme();
-  const [options, setOptions] = useState([]);
-  const handleChange = (selectedOption: selectedOption) => {
-    setSelectedOption(selectedOption);
+  const [options, setOptions] = useState<ColourOption[]>([]);
+  const handleChange = (
+    newValue: SingleValue<ColourOption> | MultiValue<ColourOption>
+  ) => {
+    if (newValue && !Array.isArray(newValue)) {
+      setSelectedOption(newValue as unknown as selectedOption);
+    } else {
+      setSelectedOption(undefined);
+    }
   };
   useEffect(() => {
-    const books = notebooks.map((book) => ({
+    const books = notebooks.map((book: book) => ({
       ...book,
       label: book.name,
     }));
+    console.log(books);
     setOptions(books);
   }, [notebooks]);
 

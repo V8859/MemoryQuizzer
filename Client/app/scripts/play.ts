@@ -1,5 +1,12 @@
 import { guestMode } from "../context/DataContext";
 import { getDB, updateDB } from "../GuestMode/DB";
+import {
+  DBType,
+  GamePayload,
+  NotebookData,
+  NoteData,
+  NoteObject,
+} from "../Types/NoteTypes";
 import { extractAllNotesFromDB } from "./notes";
 import Urls from "./urls";
 
@@ -28,26 +35,22 @@ async function getPlayDeck(id: string) {
       return []; // Return an empty array in case of error
     }
   } else {
-    const playDeck: never[] = [];
+    const playDeck: NoteObject[] = [];
     const allNotes = await extractAllNotesFromDB();
     const firstNote = [...allNotes].filter((elemeent) => elemeent.id === id)[0];
     playDeck.push(firstNote);
-    const visited = new Set();
-    visited[firstNote.tag] = firstNote.tag;
+    const visited: Set<string> = new Set();
+    visited.add(firstNote.tag);
     findNextCard(allNotes, firstNote.tag, playDeck, visited);
     console.log(playDeck);
     return playDeck;
   }
 }
 
-type gameResult = {
-  date: string | Date;
-};
-
-async function saveGameScores(data: { gameResult: gameResult }) {
+async function saveGameScores(data: GamePayload) {
   if (guestMode) {
     const DB = await getDB();
-    data.gameResult.date = new Date();
+    data.gameResult.date = new Date().toISOString();
     DB?.gameScores.push(data.gameResult);
     updateNotebookScores(data.notebooks.notebookData, DB);
     updateNoteScores(data.notes, DB);
@@ -71,10 +74,14 @@ async function saveGameScores(data: { gameResult: gameResult }) {
 async function getGameScores(data: string | null) {
   if (guestMode) {
     const DB = await getDB();
-    return DB?.gameScores;
+    if (DB) {
+      return DB?.gameScores;
+    } else {
+      return { error: "no game scores found" };
+    }
   } else {
     const url = new URL(Urls.getGameScores);
-    url.searchParams.append("id", data);
+    if (data) url.searchParams.append("id", data);
     try {
       const response = await fetch(url.toString(), {
         method: "GET",
@@ -91,10 +98,10 @@ async function getGameScores(data: string | null) {
 function findNextCard(
   notes: [],
   tag: string,
-  playDeck: never[],
-  visited: Set<object>
+  playDeck: NoteObject[],
+  visited: Set<string>
 ) {
-  let notez = JSON.parse(JSON.stringify(notes));
+  let notez: NoteObject[] = JSON.parse(JSON.stringify(notes));
   notez = notez.filter((element) => element.link === tag);
   if (notez.length <= 0) {
     return;
@@ -109,12 +116,13 @@ function findNextCard(
 
   notez = notez.filter((element) => element.score === minScore);
   const next = selectCardFromList(notez);
-  if (next.tag in visited) {
-    return;
-  }
+  if (next)
+    if (visited.has(next.tag)) {
+      return;
+    }
   if (next) {
     playDeck.push(next);
-    visited[next.tag] = next.tag;
+    visited.add(next.tag);
   }
   if (next) {
     findNextCard(notes, next.tag, playDeck, visited);
@@ -122,7 +130,7 @@ function findNextCard(
   return playDeck;
 }
 
-function selectCardFromList(notes: []) {
+function selectCardFromList(notes: NoteObject[]) {
   const length = notes.length;
   if (length === 0) return null;
   if (length === 1) return notes[0];
@@ -130,22 +138,25 @@ function selectCardFromList(notes: []) {
   return notes[random];
 }
 
-function updateNotebookScores(notebookScores: never, DB: never) {
-  for (let i = 0; i < DB?.notebooks.length; i++) {
-    const notebookZ = Object.entries(notebookScores).map(([key, value]) => ({
-      key,
-      value,
-    }));
-    for (let j = 0; j < notebookZ.length; j++) {
-      if (DB?.notebooks[i].id === notebookZ[j].key) {
-        DB.notebooks[i].score += notebookZ[j].value;
+function updateNotebookScores(notebookScores: NotebookData, DB: DBType) {
+  if (DB) {
+    for (let i = 0; i < DB?.notebooks.length; i++) {
+      const notebookZ = Object.entries(notebookScores).map(([key, value]) => ({
+        key,
+        value,
+      }));
+      for (let j = 0; j < notebookZ.length; j++) {
+        if (DB?.notebooks[i].id === notebookZ[j].key) {
+          DB.notebooks[i].score += notebookZ[j].value;
+        }
       }
     }
   }
+
   return DB;
 }
 
-function updateNoteScores(noteScores: { noteData: never[] }, DB: never) {
+function updateNoteScores(noteScores: { noteData: NoteData }, DB: DBType) {
   const data = noteScores.noteData;
 
   const notez = Object.entries(data).map(([key, value], index) => ({
@@ -153,12 +164,14 @@ function updateNoteScores(noteScores: { noteData: never[] }, DB: never) {
     id: key,
     value,
   }));
-  for (let i = 0; i < DB?.notes.length; i++) {
-    const subNotes = Object.values(DB?.notes[i].notes);
-    for (let n = 0; n < subNotes.length; n++) {
-      for (let j = 0; j < notez.length; j++) {
-        if (subNotes[n].id === notez[j].id) {
-          subNotes[n].score += notez[j].value;
+  if (DB) {
+    for (let i = 0; i < DB?.notes.length; i++) {
+      const subNotes = Object.values(DB?.notes[i].notes);
+      for (let n = 0; n < subNotes.length; n++) {
+        for (let j = 0; j < notez.length; j++) {
+          if (subNotes[n].id === notez[j].id) {
+            subNotes[n].score += notez[j].value;
+          }
         }
       }
     }

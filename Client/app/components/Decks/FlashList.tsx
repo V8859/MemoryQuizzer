@@ -1,14 +1,10 @@
 "use client";
 import React from "react";
 import { Card } from "./Card";
+import { NoteObject } from "@/app/Types/NoteTypes";
 
-type element = {
-  id: string;
-  question: string;
-  answer: string;
-};
 interface Props {
-  data: [element] | never[];
+  data: NoteObject[];
 }
 
 const FlashList = (props: Props) => {
