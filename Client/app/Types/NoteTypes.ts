@@ -69,5 +69,3 @@ export interface NoteData {
 export interface NotebookData {
   [key: string]: number;
 }
-
-interface extra {}
