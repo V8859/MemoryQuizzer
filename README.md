@@ -5,4 +5,4 @@
 
 If the steps above are completed. Switch into the server directory and inside the terminal execute ```npm run dev``` this should start the backend server. For the frontend follow the same steps, switch into the client directory and run ```npm run dev```. Connect to localhost:3000.
 
-Check out the [demo] at (https://memory-quizzer.vercel.app)
+Check out the [demo](https://memory-quizzer.vercel.app)
