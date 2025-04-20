@@ -3,9 +3,7 @@ import { useTheme } from "@/app/context/ThemeContext";
 import React from "react";
 import ToggleButton from "../Navbar/ToggleButton";
 
-type Props = {};
-
-const Logo = (props: Props) => {
+const Logo = () => {
   const { expanded } = useTheme();
   return (
     <>
