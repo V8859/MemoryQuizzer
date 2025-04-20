@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import SelectPage from "./SelectPage/SelectPage";
 import PlayPage from "./PlayPage/PlayPage";
-import PageHeader from "../PageHeader";
+import PageHeader from "../General/PageHeader";
 import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 
 const Composer = () => {

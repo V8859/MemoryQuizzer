@@ -14,6 +14,9 @@ export default {
         buttons: "var(--color-buttons)",
         typography: "var(--color-typography)",
       },
+      fontWeight: {
+        lessbold: "400",
+      },
     },
   },
   plugins: [],

@@ -26,7 +26,7 @@ const restrictedScreenSizes = ["xs", "sm", "md"];
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState("light");
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [notebooks, setNotebooks] = useState([]);
   const [notebooksChanged, setNotebooksChanged] = useState(Number);
   const screenSize = useScreenSize();

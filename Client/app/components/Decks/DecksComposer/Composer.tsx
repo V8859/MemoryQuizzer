@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DropDown from "../Dropdown";
 import CardView from "../CardView";
-import PageHeader from "../../PageHeader";
+import PageHeader from "../../General/PageHeader";
 
 type selectedOption =
   | {

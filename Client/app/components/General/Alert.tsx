@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useData } from "../context/DataContext";
+import { useData } from "@/app/context/DataContext";
 import { X } from "lucide-react";
 
 type Props = {

@@ -42,7 +42,7 @@
     fill: var(--foreground);
   }
   .NotebookBar {
-    @apply items-center bg-blue-300 h-[98%] justify-center overflow-y-auto w-full overflow-x-clip md:max-w-fit px-1 border-solid border-2 rounded;
+    @apply items-center bg-blue-300 h-full justify-center overflow-y-auto w-full overflow-x-clip md:max-w-fit px-1 border-solid border-2 rounded;
     background-color: var(--background);
     color: var(--foreground);
     border-color: var(--border-color);
@@ -193,6 +193,21 @@
   }
 }
 
+/* Makes text smoother (Recommended) */
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  will-change: transform;
+}
+html {
+  transform: translateZ(0);
+}
+
 @layer base {
   html {
     --color-primary: #4285f4;
@@ -235,12 +250,12 @@ html[data-theme="light"] {
 }
 
 html[data-theme="original"] {
-  --header: #e928ff44;
+  --header: #54075c;
   --welcome-text: rgb(255, 128, 128);
   --background: #16191b;
   --foreground: #ffffff;
-  --hoverColor: #e928ff44;
-  --hoverColorNav: #80088d;
+  --hoverColor: #54075c;
+  --hoverColorNav: #54075c;
   --textHoverColor: #ffffff;
   --border-color: white;
   --card-color: #40114f11;
@@ -273,4 +288,8 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: var(--hoverColor);
+}
+
+::-webkit-scrollbar {
+  scroll-behavior: smooth;
 }

@@ -3,7 +3,7 @@ import { SVG } from "../../Styles/GlobalStyles";
 import { LogOut, LogIn, Palette, UserRoundSearch } from "lucide-react";
 import { auth, signOut } from "@/auth";
 // import { signIn } from "@/auth";
-import ToggleButton from "./ToggleButton";
+// import ToggleButton from "./ToggleButton";
 import { CustomButton } from "./CustomButton";
 import { SidebarItem } from "./SidebarItem";
 import { ToggleThemeButton } from "./ToggleThemeButton";
@@ -12,6 +12,7 @@ import SetUserId from "./SetUserId";
 import getUserOrCreate from "@/app/scripts/login";
 import { getGuestMode, setGuestMode } from "@/app/GuestMode/GuestMode";
 import SetGuestMode from "@/app/components/Navbar/SetGuestMode";
+import Logo from "../General/Logo";
 // interface SidebarContextProps {
 //   expanded: boolean;
 // }
@@ -43,14 +44,14 @@ export const Sidebar = async ({}) => {
       <aside className=" h-[96%] m-1 my-5 ml-1 md:ml-3 BigDivShadow rounded-xl sticky">
         <nav className="Navbar">
           <div className="p-1 md:p-4 pb-2 flex justify-between items-center">
-            <div></div>
-            <ToggleButton></ToggleButton>
+            <Logo></Logo>
           </div>
           <ul className="flex-1 px-1 items-center justify-center">
             <SidebarItem icon={SVG.dashboard} text={"Dashboard"} link={"/"} />
             <SidebarItem icon={SVG.Notes} text={"Notes"} link={"/Notes"} />
             <SidebarItem icon={SVG.Decks} text={"Decks"} link={"/Decks"} />
             <SidebarItem icon={SVG.Play} text={"Play"} link={"/Play"} />
+            <SidebarItem icon={SVG.Guide} text={"Guide"} link={"/Guide"} />
           </ul>
           <div className="flex flex-col justify-center items-center relative">
             {(session && session?.user) || guestMode ? (
@@ -80,6 +81,7 @@ export const Sidebar = async ({}) => {
                   </form>
                 ) : (
                   <form
+                    className="w-full flex items-center justify-center"
                     action={async () => {
                       "use server";
                       await setGuestMode(false);

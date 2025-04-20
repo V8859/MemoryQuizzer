@@ -4,9 +4,9 @@ import { ThemeProvider } from "../context/ThemeContext";
 import { Sidebar } from "../components/Navbar/Navbar";
 import { auth } from "@/auth";
 import { getGuestMode } from "../GuestMode/GuestMode";
-import NoLogin from "../components/NoLogin";
+import NoLogin from "../components/General/NoLogin";
 import { DataProvider } from "../context/DataContext";
-import Alert from "../components/Alert";
+import Alert from "../components/General/Alert";
 
 export default async function Layout({
   children,

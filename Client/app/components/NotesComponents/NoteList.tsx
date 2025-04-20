@@ -2,7 +2,7 @@
 import React, { SetStateAction, useEffect, useMemo } from "react";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { CirclePlus, Save } from "lucide-react";
-import PageHeader from "../PageHeader";
+import PageHeader from "../General/PageHeader";
 import { useTheme } from "@/app/context/ThemeContext";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";

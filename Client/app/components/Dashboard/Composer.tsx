@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import LatestGameDetails from "./latestGame/LatestGameDetails";
 import { getGameScores } from "@/app/scripts/play";
-import PageHeader from "../PageHeader";
+import PageHeader from "../General/PageHeader";
 
 type Props = {
   userName: string | undefined | null;
