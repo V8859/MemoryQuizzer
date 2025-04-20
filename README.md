@@ -4,3 +4,5 @@
 - For the server .env file make sure it has a DATABASE_URL and DIRECT_URL for a postgres database.
 
 If the steps above are completed. Switch into the server directory and inside the terminal execute ```npm run dev``` this should start the backend server. For the frontend follow the same steps, switch into the client directory and run ```npm run dev```. Connect to localhost:3000.
+
+Check out the <a href="https://memory-quizzer.vercel.app" target="_blank">Demo</a>
