@@ -34,7 +34,11 @@ const Alert = (props: Props) => {
   }, [props.timing, showAlert, alertBool]);
 
   return (
-    <div className="fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] z-40">
+    <div
+      className={`fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] ${
+        opacity > 0 ? "z-40" : "z-[-1]"
+      }`}
+    >
       <div
         className="rounded w-full"
         style={{

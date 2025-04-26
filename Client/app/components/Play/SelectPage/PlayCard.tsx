@@ -1,4 +1,5 @@
 import { useData } from "@/app/context/DataContext";
+import { fetchNotes } from "@/app/scripts/notes";
 import { getPlayDeck } from "@/app/scripts/play";
 import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 import React, { Dispatch, SetStateAction, useState } from "react";
@@ -26,9 +27,9 @@ const PlayCard = (props: Props) => {
       onMouseEnter={() => handeDetails(true)}
       onMouseLeave={() => handeDetails(false)}
       onClick={async () => {
-        // console.log(props.data);
-        if (props.data.notes) {
-          const entries = Object.values(props.data.notes);
+        const data = await fetchNotes(props.data.id);
+        if (data) {
+          const entries = Object.values(data);
           props.setDeckName(props.data.name);
           if (entries.length > 0) {
             const sortedEntries: Entries[] = entries.sort(

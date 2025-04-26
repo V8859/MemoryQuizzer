@@ -1,13 +1,12 @@
-import Urls from "./urls";
 import { guestMode } from "../context/DataContext";
-import { getDB, updateDB } from "../GuestMode/DB";
-import { Note, NotebookObject, NoteObject } from "../Types/NoteTypes";
+import { getDB } from "../GuestMode/DB";
+import Urls from "./urls";
 
 async function getNotebooks(id?: string | null) {
   if (guestMode) {
     const DB = await getDB();
     if (DB) {
-      return DB.notebooks.length > 0 ? DB.notebooks : [];
+      return await DB.notebooks.toArray();
     }
   } else {
     //   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -43,35 +42,15 @@ async function getNotebooksForPlay(id?: string) {
     } = { books: [], hidden: false };
     const DB = await getDB();
     if (DB) {
-      const notebooks: NotebookObject[] = DB.notebooks ? DB.notebooks : [];
-      const notes: Note[] = DB.notes;
-      notes.filter((element) => element?.notes.length > 3);
-      const correctIds = notebooksWithMinLength(4, notes);
-      if (correctIds.length !== notebooks.length) {
-        response.hidden = true;
-      }
-
-      const map = new Map(
-        notes.map((item: { id: string; notes: NoteObject[] }) => [
-          item.id,
-          item.notes,
-        ])
-      );
-      const filteredArray: NotebookObject[] = Object.values(
-        JSON.parse(JSON.stringify(notebooks)) as NotebookObject[]
-      ).filter((item) => {
-        if (correctIds.includes(item.id)) {
-          return item;
+      const notebooks = await DB.notebooks.toArray();
+      for (const element in notebooks) {
+        const notes = await DB.notes
+          .where("notebookId")
+          .equals(notebooks[element].id)
+          .toArray();
+        if (notes.length > 0) {
+          response.books.push(notebooks[element]);
         }
-      });
-
-      const mergedArray = filteredArray.map((item) => ({
-        ...item,
-        notes: map.get(item.id),
-      }));
-
-      if (filteredArray) {
-        response.books = mergedArray;
       }
       return response;
     }
@@ -119,9 +98,14 @@ async function addNotebook(
     const DB = await getDB();
     const payloadGuest = payload as NotebookObjectGuest;
     if (DB) {
-      DB.notebooks.push(payloadGuest);
-      await updateDB(DB);
-      return { ok: true, notebooks: DB.notebooks };
+      try {
+        await DB.notebooks.add(payloadGuest);
+        const notebooks = await DB.notebooks.toArray();
+        return { ok: true, notebooks: notebooks };
+      } catch (error) {
+        console.error(error);
+        return { ok: false, error: "FAILED" };
+      }
     }
   } else {
     const payloadServer = payload as NotebookObjectServer;
@@ -147,17 +131,12 @@ async function deleteNotebook(payload: { id: string }) {
   } else {
     const DB = await getDB();
     if (DB) {
-      DB.notebooks = DB.notebooks.filter(
-        (element: { id: string }) => element.id !== payload.id
-      );
-      console.log(DB?.notes);
-      DB.notes = DB?.notes.filter(
-        (element: { id: string }) => element.id !== payload.id
-      );
-      console.log(DB?.notes);
-      await updateDB(DB);
-      return { message: "success", data: DB.notebooks };
+      if (DB) {
+        DB.notebooks.delete(payload.id);
+        DB.notes.where("notebookId").equals(payload.id).delete();
+      }
     }
+    return { message: "success", data: await DB.notebooks.toArray() };
   }
 }
 
@@ -167,11 +146,14 @@ async function renameNotebook(payload: {
 }) {
   if (guestMode) {
     const DB = await getDB();
-    DB?.notebooks.forEach((element: { id: string; name: string }) => {
-      if (element.id === payload.id) element.name = payload.name;
-    });
-    await updateDB(DB);
-    return "success";
+    if (payload.id) {
+      const existingNotebook = await DB.notebooks.get(payload.id);
+      if (!existingNotebook) {
+        return { ok: false, error: "Notebook doesn't exist" };
+      }
+      await DB.notebooks.update(payload.id, { name: payload.name });
+      return "success";
+    }
   } else {
     const response = await fetch(Urls.renameNotebook, {
       method: "POST",
@@ -181,25 +163,25 @@ async function renameNotebook(payload: {
     return await response.json();
   }
 }
-type notes = {
-  id: string;
-  notes: NoteObject[];
-};
+// type notes = {
+//   id: string;
+//   notes: NoteObject[];
+// };
 
-function notebooksWithMinLength(length: number, notes: notes[]) {
-  const acceptableNotebooks = [];
-  for (let i = 0; i < notes.length; i++) {
-    if (Object.values(notes[i].notes).length >= length) {
-      acceptableNotebooks.push(notes[i].id);
-    }
-  }
-  return acceptableNotebooks;
-}
+// function notebooksWithMinLength(length: number, notes: notes[]) {
+//   const acceptableNotebooks = [];
+//   for (let i = 0; i < notes.length; i++) {
+//     if (Object.values(notes[i].notes).length >= length) {
+//       acceptableNotebooks.push(notes[i].id);
+//     }
+//   }
+//   return acceptableNotebooks;
+// }
 
 export {
-  getNotebooks,
   addNotebook,
-  getNotebooksForPlay,
   deleteNotebook,
+  getNotebooks,
+  getNotebooksForPlay,
   renameNotebook,
 };

@@ -187,7 +187,7 @@ const MyForm = () => {
           minLength={1}
           maxLength={20}
         />
-        <button title="AddNotebook" type="submit">
+        <button title="AddNotebook" className="w-full h-full" type="submit">
           <CirclePlus></CirclePlus>
         </button>
         <button title="ResetNotebookInput" type="reset">

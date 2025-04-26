@@ -1,10 +1,10 @@
 "use client";
 
+import { guestMode } from "@/app/context/DataContext";
 import { getNotebooksForPlay } from "@/app/scripts/notebook";
+import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 import React, { SetStateAction, useEffect } from "react";
 import PlayCard from "./PlayCard";
-import { guestMode } from "@/app/context/DataContext";
-import { NotebookObject, NoteObject } from "@/app/Types/NoteTypes";
 
 type Props = {
   searchTerm: string;
@@ -24,20 +24,20 @@ const DeckList = (props: Props) => {
       const userId = localStorage.getItem("userId");
       if (userId && !guestMode) {
         const books = await getNotebooksForPlay(userId);
-        // console.log(books);
         setDecks(books.books);
         // console.log(books.hidden);
         setWarning(books.hidden);
         // console.log("NO");
-      }
-      if (guestMode) {
+      } else {
         const books = await getNotebooksForPlay();
+
         setDecks(books.books);
         setWarning(books.hidden);
       }
     };
     fetchNotebooks();
-  }, [playMode, setWarning, setDecks]);
+  }, [setDecks, setWarning, playMode]);
+
   let filteredDecks: NotebookObject[] = [];
   if (decks) {
     filteredDecks = props.decks.filter((ele) =>

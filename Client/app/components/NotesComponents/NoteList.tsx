@@ -1,14 +1,14 @@
 "use client";
-import React, { SetStateAction, useEffect, useMemo } from "react";
-import { fetchNotes, saveNotes } from "@/app/scripts/notes";
-import { CirclePlus, Save } from "lucide-react";
-import PageHeader from "../General/PageHeader";
+import { guestMode, useData } from "@/app/context/DataContext";
 import { useTheme } from "@/app/context/ThemeContext";
+import { fetchNotes, saveNotes } from "@/app/scripts/notes";
+import { NoteObject } from "@/app/Types/NoteTypes";
+import { CirclePlus, Save } from "lucide-react";
+import React, { SetStateAction, useEffect } from "react";
+import { v4 as uuid } from "uuid";
+import PageHeader from "../General/PageHeader";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
-import { guestMode, useData } from "@/app/context/DataContext";
-import { v4 as uuid } from "uuid";
-import { NoteObject } from "@/app/Types/NoteTypes";
 
 type NotesIterator = {
   [noteId: string]: NoteObject;
@@ -30,29 +30,26 @@ export const NoteList = ({
 }) => {
   const { setNotebooks } = useTheme();
 
-  const { noteListFlag, toggleNoteList, toggleAlert } = useData();
+  const { toggleNoteList, toggleAlert } = useData();
   useEffect(() => {
     const noteFetcher = async () => {
       try {
         if (noteId) {
           if (!guestMode) {
-            await fetchNotes(setData, noteId);
+            await fetchNotes(noteId, setData);
+          }
+          const fetchedNotes = await fetchNotes(noteId);
+          if (fetchedNotes) {
+            setData(fetchedNotes);
+            toggleNoteList();
           }
         }
       } catch (err) {
         console.log(err);
       }
     };
-    if (!guestMode) {
-      noteFetcher();
-    }
-  }, [noteId, refetch, noteListFlag, setData]);
 
-  useMemo(async () => {
-    if (guestMode) {
-      const fetchedNotes = await fetchNotes(setData, noteId);
-      return fetchedNotes;
-    }
+    noteFetcher();
   }, [noteId, refetch, setData]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {

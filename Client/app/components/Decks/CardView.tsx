@@ -13,7 +13,7 @@ const CardView = ({ notebookId }: { notebookId: string | undefined }) => {
 
   useEffect(() => {
     if (notebookId) {
-      fetchNotes(setData, notebookId);
+      fetchNotes(notebookId, setData);
     }
   }, [notebookId]);
   return (
