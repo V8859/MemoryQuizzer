@@ -27,14 +27,14 @@ async function getPlayDeck(id: string) {
 
       const data = await response.json();
       // console.log(data); // Log the entire data object to inspect the structure
-      console.log(data);
+      // console.log(data);
       return data; // Assuming data is an array of notebooks
     } catch (error) {
       console.error("Error:", error);
       return []; // Return an empty array in case of error
     }
   } else {
-    console.log("I WAS CALLED?");
+    // console.log("I WAS CALLED?");
     const playDeck: NoteObject[] = [];
     const allNotes = await extractAllNotesFromDB();
     const firstNote = allNotes?.filter((element, index) => {
@@ -48,7 +48,7 @@ async function getPlayDeck(id: string) {
       const visited: Set<string> = new Set();
       visited.add(firstNote.tag);
       findNextCard(allNotes, firstNote.tag, playDeck, visited);
-      console.log(playDeck);
+      // console.log(playDeck);
       return playDeck;
     }
   }
@@ -90,7 +90,7 @@ async function getGameScores(data: string | null) {
         method: "GET",
       });
       const rData = await response.json();
-      console.log(rData);
+      // console.log(rData);
       return rData;
     } catch (err) {
       console.error(err);
@@ -122,14 +122,14 @@ function findNextCard(
 
   if (next)
     if (visited.has(next.tag)) {
-      console.log(visited, "AND ", next);
+      // console.log(visited, "AND ", next);
 
       return;
     }
 
   if (next) {
     playDeck.push(next);
-    console.log("ADDED");
+    // console.log("ADDED");
     visited.add(next.tag);
   }
   if (next) {
@@ -159,7 +159,7 @@ async function updateNotebookScores(notebookScores: NotebookData) {
 
 async function updateNoteScores(noteScores: { noteData: NoteData }) {
   const data = noteScores.noteData;
-  console.log(data);
+  // console.log(data);
   const DB = await getDB();
   for (const note in data) {
     await DB.notes.update(note, (item) => {

@@ -148,8 +148,8 @@ const MyForm = () => {
         score: 0,
       };
     }
-    console.log("payloadNotebook", payload);
-    console.log(guestMode);
+    // console.log("payloadNotebook", payload);
+    // console.log(guestMode);
     if (formData.get("name"))
       try {
         let data: { ok: boolean };

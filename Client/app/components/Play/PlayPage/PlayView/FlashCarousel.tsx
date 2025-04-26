@@ -35,7 +35,7 @@ const FlashCarousel = ({
       setFlipped(true);
     }
     const setter = async () => {
-      console.log("CHILDREN", cards);
+      // console.log("CHILDREN", cards);
       const op = getOptions(curr, cards);
       setOptions(op);
     };
@@ -82,7 +82,7 @@ const FlashCarousel = ({
           if (choice.notebookId in newData) {
             newData[choice.notebookId] -= 1;
           } else {
-            console.log(choice.notebookId);
+            // console.log(choice.notebookId);
             newData[choice.notebookId] = -1;
           }
       }
@@ -94,10 +94,10 @@ const FlashCarousel = ({
   const handeChoice = (choice: Choice, key: number | string) => {
     if (curr < cards.length) {
       if (cards[curr] == choice) {
-        console.log("NotebookID", choice.notebookId);
+        // console.log("NotebookID", choice.notebookId);
         setCorrect("bg-green-400 rounded-xl");
         setGameScore(gameScore + 1);
-        console.log("CARD,", cards[curr]);
+        // console.log("CARD,", cards[curr]);
         handleIncrements(cards[curr]);
       } else {
         setCorrect("bg-red-400 rounded-xl");
@@ -131,7 +131,7 @@ const FlashCarousel = ({
           noOfCards: curr + 1,
         },
       };
-      console.log(payload);
+      // console.log(payload);
       try {
         await saveGameScores(payload);
       } catch (err) {

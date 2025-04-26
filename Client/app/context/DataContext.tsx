@@ -24,7 +24,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const toggleNoteList = () => {
-    console.log("NoteList toggled");
+    // console.log("NoteList toggled");
     setNoteListFlag((prev) => !prev);
   };
   const toggleAlert = (message: string, showIT: boolean = true) => {
@@ -35,7 +35,7 @@ export const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
   const changeGuestMode = (current: boolean) => {
     guestMode = current;
-    console.log("GuestMode", guestMode);
+    // console.log("GuestMode", guestMode);
   };
   return (
     <DataContext.Provider

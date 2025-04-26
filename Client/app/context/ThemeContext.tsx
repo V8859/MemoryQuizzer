@@ -47,12 +47,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   const toggleCollapse = () => {
     if (!compareString(screenSize, restrictedScreenSizes)) {
-      console.log(!compareString(screenSize, restrictedScreenSizes));
+      // console.log(!compareString(screenSize, restrictedScreenSizes));
       setExpanded((prevState) => !prevState);
     }
   };
   useEffect(() => {
-    console.log("Screen Size changed");
+    // console.log("Screen Size changed");
     if (screenSize === "xs" || screenSize === "sm" || screenSize === "md") {
       setExpanded(false);
     }
@@ -87,7 +87,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     fetchNotebooks();
-    console.log("REFETCH NOTEBOOKS");
+    // console.log("REFETCH NOTEBOOKS");
   }, [notebooksChanged]);
   return (
     <ThemeContext.Provider

@@ -16,7 +16,7 @@ type selectedOption =
 
 const Composer = () => {
   const [selectedOption, setSelectedOption] = useState<selectedOption>();
-  console.log("THIS IS SELECTED OPTION", selectedOption);
+  // console.log("THIS IS SELECTED OPTION", selectedOption);
   return (
     <>
       <div className="Composer">

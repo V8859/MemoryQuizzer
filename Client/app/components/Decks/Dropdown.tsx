@@ -134,7 +134,7 @@ const DropDown = (props: Props) => {
       ...book,
       label: book.name,
     }));
-    console.log(books);
+    // console.log(books);
     setOptions(books);
   }, [notebooks]);
 

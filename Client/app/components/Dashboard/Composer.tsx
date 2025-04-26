@@ -30,7 +30,7 @@ const Composer = (props: Props) => {
       try {
         if (id) {
           const gameData = await getGameScores(id);
-          console.log(gameData);
+          // console.log(gameData);
           const updateData: updateData = { details: gameData };
           if ("error" in updateData.details) {
             if (updateData.details.error) {
@@ -38,7 +38,7 @@ const Composer = (props: Props) => {
             }
           } else {
             setData(updateData);
-            console.log("UPDATE DATA", updateData);
+            // console.log("UPDATE DATA", updateData);
           }
         } else {
           const gameData = await getGameScores("some");

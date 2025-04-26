@@ -51,7 +51,7 @@ const PlayCard = (props: Props) => {
               }
 
               if (playDeck) {
-                console.log("PlayDeck", playDeck);
+                // console.log("PlayDeck", playDeck);
                 props.setCards(playDeck);
               }
             }

@@ -67,7 +67,7 @@ export const NoteList = ({
       const notes: NotesIterator = {};
       for (const [key, value] of formData.entries()) {
         const [noteId, field] = key.split("_");
-        console.log(noteId, field);
+        // console.log(noteId, field);
         if (!notes[noteId]) {
           notes[noteId] = {
             question: "",
@@ -92,7 +92,7 @@ export const NoteList = ({
       }
       let Iterator = 0;
       for (const key in notes) {
-        console.log(notes);
+        // console.log(notes);
         notes[key].id = data[Iterator].id;
         notes[key].score = data[Iterator].score;
         if (guestMode) {

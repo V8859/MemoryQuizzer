@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PlayPage = (props: Props) => {
-  console.log(props.cards);
+  // console.log(props.cards);
   const { cards } = props;
   return (
     <div className="flex flex-col h-full w-full">

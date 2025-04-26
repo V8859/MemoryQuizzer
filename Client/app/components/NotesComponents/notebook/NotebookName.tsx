@@ -29,7 +29,7 @@ const NotebookName = ({
     };
     const response = await renameNotebook(payload);
     if (response === "success") {
-      console.log("SO IT WORKED?");
+      // console.log("SO IT WORKED?");
       setNotebooksChanged((prev: number) => prev + 1);
     } else {
       console.error("Notebook rename failed");
