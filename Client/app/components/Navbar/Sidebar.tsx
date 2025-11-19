@@ -1,6 +1,6 @@
 import React from "react";
 import { SVG } from "../../Styles/GlobalStyles";
-import { LogOut, LogIn, Palette, UserRoundSearch } from "lucide-react";
+import { LogOut, LogIn, Palette, UserRoundSearch, CopyrightIcon, Paperclip } from "lucide-react";
 import { auth, signOut } from "@/auth";
 // import { signIn } from "@/auth";
 // import ToggleButton from "./ToggleButton";
@@ -13,6 +13,7 @@ import getUserOrCreate from "@/app/scripts/login";
 import { getGuestMode, setGuestMode } from "@/app/GuestMode/GuestMode";
 import SetGuestMode from "@/app/components/Navbar/SetGuestMode";
 import Logo from "../General/Logo";
+import Copyright from "./Copyright";
 // interface SidebarContextProps {
 //   expanded: boolean;
 // }
@@ -27,8 +28,8 @@ import Logo from "../General/Logo";
 //   expanded = !expanded;
 // };
 // // const session = await auth();
-export const Sidebar = async ({}) => {
-const guestMode = await getGuestMode();
+export const Sidebar = async ({ }) => {
+  const guestMode = await getGuestMode();
   let userId = null;
   const session = await auth();
   if (!guestMode) {
@@ -51,7 +52,7 @@ const guestMode = await getGuestMode();
             <SidebarItem icon={SVG.Notes} text={"Notes"} link={"/Notes"} />
             <SidebarItem icon={SVG.Decks} text={"Decks"} link={"/Decks"} />
             <SidebarItem icon={SVG.Play} text={"Play"} link={"/Play"} />
-            <SidebarItem icon={SVG.Guide} text={"Guide"} link={"/Guide"} />
+            <SidebarItem icon={<Paperclip />} text={"Guide"} link={"/Guide"} />
           </ul>
           <div className="flex flex-col justify-center items-center relative">
             {(session && session?.user) || guestMode ? (
@@ -159,6 +160,7 @@ const guestMode = await getGuestMode();
                 <SetUserId remove={true} userId={null}></SetUserId>
               </>
             )}
+            <Copyright />
           </div>
         </nav>
       </aside>

@@ -19,19 +19,17 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   return (
     <li className="relative overflow-visible">
       <Link
-        className={` ${
-          expanded
+        className={` ${expanded
             ? "NavButton"
             : "sNavButton " +
-              " w-full my-3 flex-1 pt-1 justify-center pb-1 object-center group relative"
-        }`}
+            " w-full my-3 flex-1 pt-1 justify-center pb-1 object-center group relative"
+          }`}
         href={link || "#"}
       >
         {icon}
         <span
-          className={`overflow-hidden transition-all ${
-            expanded ? "w-52 ml-3" : "w-0"
-          }`}
+          className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"
+            }`}
         >
           {text}
         </span>
