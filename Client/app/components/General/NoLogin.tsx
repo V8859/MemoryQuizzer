@@ -1,4 +1,5 @@
 import React from "react";
+import GuestModeButton from "./GuestModeButton";
 
 const NoLogin = () => {
   return (
@@ -7,7 +8,7 @@ const NoLogin = () => {
         <div className="Composer">
           <div className="NoteArea flex">
             <h1 className="text-xl text-pretty font-[Consolas] text-gray-600">
-              Please login or Continue as Guest
+              <GuestModeButton />
             </h1>
           </div>
         </div>
@@ -17,3 +18,5 @@ const NoLogin = () => {
 };
 
 export default NoLogin;
+
+
