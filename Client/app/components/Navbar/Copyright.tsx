@@ -3,9 +3,8 @@ import { useTheme } from '@/app/context/ThemeContext'
 import { CopyrightIcon } from 'lucide-react'
 import React from 'react'
 
-type Props = {}
 
-const Copyright = (props: Props) => {
+const Copyright = () => {
     const { expanded } = useTheme()
     return (
         <>

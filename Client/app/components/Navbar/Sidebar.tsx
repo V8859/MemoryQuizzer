@@ -1,6 +1,6 @@
 import React from "react";
 import { SVG } from "../../Styles/GlobalStyles";
-import { LogOut, LogIn, Palette, UserRoundSearch, CopyrightIcon, Paperclip } from "lucide-react";
+import { LogOut, LogIn, Palette, UserRoundSearch, Paperclip } from "lucide-react";
 import { auth, signOut } from "@/auth";
 // import { signIn } from "@/auth";
 // import ToggleButton from "./ToggleButton";

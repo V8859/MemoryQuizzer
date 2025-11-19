@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, SetStateAction, useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import NoteList from "./NoteList";
 import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
