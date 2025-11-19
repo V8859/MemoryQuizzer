@@ -28,7 +28,7 @@ import Logo from "../General/Logo";
 // };
 // // const session = await auth();
 export const Sidebar = async ({}) => {
-  const guestMode = await getGuestMode();
+const guestMode = await getGuestMode();
   let userId = null;
   const session = await auth();
   if (!guestMode) {
@@ -40,7 +40,7 @@ export const Sidebar = async ({}) => {
   }
 
   return (
-    <div className="h-full item-center sticky NavbarTransitionStyle">
+    <div className="h-full item-center top-0 sticky NavbarTransitionStyle">
       <aside className=" h-[96%] m-1 my-5 ml-1 md:ml-3 BigDivShadow rounded-xl sticky">
         <nav className="Navbar">
           <div className="p-1 md:p-4 pb-2 flex justify-between items-center">

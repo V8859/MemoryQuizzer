@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useState } from "react";
+import React, { Fragment, SetStateAction, useState } from "react";
 import NoteList from "./NoteList";
 import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
@@ -32,7 +32,7 @@ export const Composer = () => {
           payload={payload}
         ></DeleteConfirmation>
       ) : (
-        <>
+        <div className="flex w-full h-full flex-col md:flex-row gap-2">
           <NoteList
             data={data}
             setData={setData}
@@ -48,7 +48,7 @@ export const Composer = () => {
             notebooks={notebooks}
             setPayload={setPayload}
           ></Notebooks>
-        </>
+        </div>
       )}
     </div>
   );

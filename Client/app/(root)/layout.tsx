@@ -1,7 +1,7 @@
 import React from "react";
 import { ThemeProvider } from "../context/ThemeContext";
 // import { Navbar } from "../components/Sidebar";
-import { Sidebar } from "../components/Navbar/Navbar";
+import { Sidebar } from "../components/Navbar/Sidebar";
 import { auth } from "@/auth";
 import { getGuestMode } from "../GuestMode/GuestMode";
 import NoLogin from "../components/General/NoLogin";
