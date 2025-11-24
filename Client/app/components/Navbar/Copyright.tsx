@@ -6,11 +6,17 @@ import React from 'react'
 
 const Copyright = () => {
     const { expanded } = useTheme()
+    const text = "All rights reserved"
     return (
         <>
-            <div title='All rights reserved' className='w-full justify-center items-center flex gap-2 py-2 mr-2'>
+            <div title='All rights reserved' className='w-full justify-center items-center flex py-2'>
                 <CopyrightIcon />
-                {expanded && "All rights reserved"}
+                <span
+                    className={`overflow-hidden flex items-center justify-center duration-300 transition-all ease-in-out ${expanded ? "w-52 ml-2" : "w-0"
+                        }`}
+                >
+                    {text}
+                </span>
             </div>
         </>
     )

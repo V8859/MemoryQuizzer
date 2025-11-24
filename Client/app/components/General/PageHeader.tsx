@@ -8,7 +8,7 @@ type Props = {
   userName?: string | null | undefined;
   title2?: string;
   href2?: string;
-  children?: React.ReactNode;
+  children?: React.ReactNode[];
 };
 
 const PageHeader = (props: Props) => {
@@ -40,20 +40,28 @@ const PageHeader = (props: Props) => {
           )}
         </div>
 
-        <div className="w-fit items-center justify-center WelcomeMessage flex gap-2 font-sans pt-2 px-4 rounded-t-xl">
-          <h1 className="text-[20px]">
-            {props.children ? props.children : props.message}
-          </h1>
-          {props.userName ? (
-            <h1
-              className={
-                "text-center font-extralight text-[20px] flex items-center justify-center"
-              }
-            >{`${props.userName?.split(" ")[0]}`}</h1>
-          ) : (
-            ""
-          )}
+        <div className="w-full flex items-end justify-between">
+
+          <div className="w-fit items-center justify-center WelcomeMessage flex gap-2 font-sans pt-2 px-4 rounded-t-xl">
+            <h1 className="text-[20px]">
+              {props.children?.[0] ? props.children[0] : props.message}
+            </h1>
+            {props.userName ? (
+              <h1
+                className={
+                  "text-center font-extralight text-[20px] flex items-center justify-center"
+                }
+              >{`${props.userName?.split(" ")[0]}`}</h1>
+            ) : (
+              ""
+            )}
+          </div>
+          <div>
+            {props.children?.[1]}
+          </div>
         </div>
+
+
       </div>
     </div>
   );

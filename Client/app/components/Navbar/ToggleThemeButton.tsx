@@ -15,15 +15,14 @@ export const ToggleThemeButton: React.FC<buttonProps> = ({ icon, type }) => {
 
   return (
     <button
-      className={`"overflow-hidden transition-all" ${
-        expanded ? "NavButton" : "sNavButton group"
-      }`}
+      className={`"overflow-hidden transition-all" ${expanded ? "NavButton" : "sNavButton group"
+        }`}
       onClick={toggleTheme}
       type={type}
     >
       <div className="w-[30px]">{icon}</div>
       <span
-        className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-52" : "w-0"}`}
       >
         {theme[0].toUpperCase() + theme.slice(1)}
       </span>

@@ -17,18 +17,18 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
 }) => {
   const { expanded } = useTheme();
   return (
-    <li className="relative overflow-visible">
+    <li className="relative transition-all duration-300 transform overflow-visible">
       <Link
         className={` ${expanded
-            ? "NavButton"
-            : "sNavButton " +
-            " w-full my-3 flex-1 pt-1 justify-center pb-1 object-center group relative"
+          ? "NavButton"
+          : "sNavButton " +
+          " w-full my-3 transform flex-1 pt-1 justify-center pb-1 object-center group relative"
           }`}
         href={link || "#"}
       >
         {icon}
         <span
-          className={`overflow-hidden transition-all ${expanded ? "w-52 ml-3" : "w-0"
+          className={`overflow-hidden duration-300 transition-all ease-in-out ${expanded ? "w-52 ml-3" : "w-0"
             }`}
         >
           {text}

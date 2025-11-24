@@ -1,5 +1,6 @@
 import { guestMode } from "../context/DataContext";
 import { getDB } from "../GuestMode/DB";
+import { fetchNotes } from "./notes";
 import Urls from "./urls";
 
 async function getNotebooks(id?: string | null) {
@@ -178,10 +179,36 @@ async function renameNotebook(payload: {
 //   return acceptableNotebooks;
 // }
 
+async function exportNotebook(notebookId: string | undefined) {
+  const db = await getDB();
+
+  if (notebookId) {
+    const notebook = await db.notebooks.get(notebookId);
+    const notes = await fetchNotes(notebookId);
+
+    const json = JSON.stringify({ notebook, notes }, null, 2);
+
+    // Create a Blob with JSON content
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link and trigger download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${notebook?.name}.json`; // filename
+    a.click();
+
+    // Clean up
+    URL.revokeObjectURL(url);
+  }
+}
+
+
 export {
   addNotebook,
   deleteNotebook,
   getNotebooks,
   getNotebooksForPlay,
   renameNotebook,
+  exportNotebook
 };

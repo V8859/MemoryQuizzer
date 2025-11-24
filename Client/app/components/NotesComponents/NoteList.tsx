@@ -9,6 +9,7 @@ import { v4 as uuid } from "uuid";
 import PageHeader from "../General/PageHeader";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
+import { exportNotebook } from "@/app/scripts/notebook";
 
 type NotesIterator = {
   [noteId: string]: NoteObject;
@@ -216,7 +217,16 @@ export const NoteList = ({
                 "SELECT BOOK"
               )
             }
-          ></PageHeader>
+          >{undefined}{noteId && <div className="flex h-10 flex-row gap-2 pr-2">
+            <button className="WelcomeMessage ease-in-out transition-all duration-300 mt-2 hover:-mt-2 flex justify-start p-2 rounded-t-xl">
+              Import
+            </button>
+            <button
+              onClick={() => {
+                exportNotebook(noteId)
+              }}
+              className="WelcomeMessage flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">Export</button>
+          </div>}</PageHeader>
         </div>
         <form
           className="flex flex-col items-center w-[100%]"

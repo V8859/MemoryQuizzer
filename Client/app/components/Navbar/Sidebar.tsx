@@ -44,7 +44,7 @@ export const Sidebar = async ({ }) => {
     <div className="h-full item-center top-0 sticky NavbarTransitionStyle">
       <aside className=" h-[96%] m-1 my-5 ml-1 md:ml-3 BigDivShadow rounded-xl sticky">
         <nav className="Navbar">
-          <div className="p-1 md:p-4 pb-2 flex justify-between items-center">
+          <div className="p-1 md:p-4 pb-2 flex transition-all duration-300 justify-between items-center">
             <Logo></Logo>
           </div>
           <ul className="flex-1 px-1 items-center justify-center">
@@ -125,10 +125,10 @@ export const Sidebar = async ({ }) => {
                 {/* </form> */}
               </>
             )}
-
-            <div className="flex items-center mb-5">
+            {guestMode || (session && session?.user) ? "" : <div className="flex items-center mb-5">
               <span className="mx-2 text-gray-500">or</span>
             </div>
+            }
             {(session && session?.user) || guestMode ? (
               ""
             ) : (

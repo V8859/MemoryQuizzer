@@ -27,18 +27,17 @@ export const CustomButton: React.FC<buttonProps> = ({
   return (
     <button
       disabled={disabled}
-      className={`"overflow-hidden " ${
-        !disabled
-          ? expanded
-            ? "NavButton"
-            : "sNavButton group "
-          : "rounded-l flex w=[100%] mb-5 py-1 justify-center relative h-[30px] z-50"
-      }`}
+      className={`"overflow-hidden " ${!disabled
+        ? expanded
+          ? "NavButton"
+          : "sNavButton group "
+        : "rounded-l flex w-[100%] mb-5 py-1 justify-center relative h-[30px] z-50"
+        }`}
       onClick={
         action
           ? () => {
-              action();
-            }
+            action();
+          }
           : undefined
       }
       type={type}
@@ -46,13 +45,13 @@ export const CustomButton: React.FC<buttonProps> = ({
       <div className="w-[30px]">{icon}</div>
       {disabled ? (
         <span
-          className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-52" : "w-0"}`}
         >
           {`${text} not available in demo`}
         </span>
       ) : (
         <span
-          className={`overflow-hidden transition-all ${expanded ? "" : "w-0"}`}
+          className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "w-52" : "w-0"}`}
         >
           {text}
         </span>
