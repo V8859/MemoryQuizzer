@@ -44,7 +44,7 @@ const PageHeader = (props: Props) => {
 
           <div className="w-fit items-center justify-center WelcomeMessage flex gap-2 font-sans pt-2 px-4 rounded-t-xl">
             <h1 className="text-[20px]">
-              {props.children?.[0] ? props.children[0] : props.message}
+              {props.children?.[0] ? props.children?.[0] : props.message}
             </h1>
             {props.userName ? (
               <h1

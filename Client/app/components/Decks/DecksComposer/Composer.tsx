@@ -6,12 +6,12 @@ import PageHeader from "../../General/PageHeader";
 
 type selectedOption =
   | {
-      createdAt: string;
-      id: string;
-      label: string;
-      name: string;
-      score: number;
-    }
+    createdAt: string;
+    id: string;
+    label: string;
+    name: string;
+    score: number;
+  }
   | undefined;
 
 const Composer = () => {
@@ -31,6 +31,8 @@ const Composer = () => {
                 selectedOption={selectedOption}
                 setSelectedOption={setSelectedOption}
               ></DropDown>
+              {undefined}
+
             </PageHeader>
           </div>
 

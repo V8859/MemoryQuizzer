@@ -47,7 +47,7 @@ export const fetchNotes = async (
   //   return arr;
   // }
 };
-type savePayload = {
+export type savePayload = {
   notes: NoteObject[];
   id: string;
   userId: string | null;
@@ -70,6 +70,7 @@ export const saveNotes = async (payload: savePayload) => {
     } else {
       payload.notes.forEach(async (note) => {
         const curr = await DB.notes.get(note.id);
+        console.log("Checking", note)
         if (curr) {
           await DB.notes.update(curr.id, note);
         } else {

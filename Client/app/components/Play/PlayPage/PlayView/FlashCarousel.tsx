@@ -219,26 +219,25 @@ const FlashCarousel = ({
           </div>
         </div> */}
           <div>
-            <div className="flex flex-col gap-2 items-center w-full">
+            <div className="flex flex-col gap-2 cursor-pointer items-center w-full">
               {options.length > 0
                 ? options.map((choice, key) => (
-                    <div
-                      className="w-[110%] mx-10 flex flex-col border-2 rounded-xl hover:scale-y-105"
-                      key={key}
-                    >
-                      <button
-                        disabled={disabled}
-                        className={`${correctKey == key ? correct : ""} ${
-                          disabled ? "" : "hover:bg-blue-300 rounded-xl"
+                  <div
+                    className="mx-4 w-full px-[0.2rem] py-1 flex cursor-pointer text-wrap flex-col border-2 rounded-xl hover:scale-y-105"
+                    key={key}
+                  >
+                    <button
+                      disabled={disabled}
+                      className={`${correctKey == key ? correct : ""} ${disabled ? "" : "hover:bg-blue-300 text-wrap rounded-xl"
                         }`}
-                        onClick={() => {
-                          handeChoice(choice, key);
-                        }}
-                      >
-                        {choice.answer}
-                      </button>
-                    </div>
-                  ))
+                      onClick={() => {
+                        handeChoice(choice, key);
+                      }}
+                    >
+                      {choice.answer}
+                    </button>
+                  </div>
+                ))
                 : "loading..."}
             </div>
           </div>

@@ -11,18 +11,17 @@
 }
 
 .flip-card {
-  @apply w-[270px] h-[400px] text-xs md:w-[500px] md:h-[300px];
+  @apply w-[270px] h-[400px] hover:-translate-y-1 md:w-[500px] md:h-[300px];
   perspective: 1000px;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.7s;
-  &:hover {
-    transform: scaleX(105%) scaleY(101%);
-  }
+  transition: transform 0.3s;
 }
 
 .flip-card.flipped {
   transform: rotateX(180deg);
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
 }
 
 .flip-card-inner {
@@ -60,7 +59,6 @@
 
 .card-content {
   @apply flex w-full h-[100%] justify-center items-center p-5;
-  text-wrap: wrap;
   overflow-wrap: anywhere;
   white-space: wrap;
   text-overflow: ellipsis;

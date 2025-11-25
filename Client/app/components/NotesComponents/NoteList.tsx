@@ -9,7 +9,7 @@ import { v4 as uuid } from "uuid";
 import PageHeader from "../General/PageHeader";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
-import { exportNotebook } from "@/app/scripts/notebook";
+import { exportNotebook, importNotebook } from "@/app/scripts/notebook";
 
 type NotesIterator = {
   [noteId: string]: NoteObject;
@@ -217,15 +217,9 @@ export const NoteList = ({
                 "SELECT BOOK"
               )
             }
-          >{undefined}{noteId && <div className="flex h-10 flex-row gap-2 pr-2">
-            <button className="WelcomeMessage ease-in-out transition-all duration-300 mt-2 hover:-mt-2 flex justify-start p-2 rounded-t-xl">
-              Import
-            </button>
-            <button
-              onClick={() => {
-                exportNotebook(noteId)
-              }}
-              className="WelcomeMessage flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">Export</button>
+          >{undefined}{<div className="relative flex z-10 h-10 flex-row gap-2 pr-2">
+            <ImportButton />
+            {noteId && <ExportButton noteId={noteId}></ExportButton>}
           </div>}</PageHeader>
         </div>
         <form
@@ -282,3 +276,67 @@ export const NoteList = ({
 };
 
 export default NoteList;
+
+
+import { useRef } from "react";
+
+function ImportButton() {
+  const { setNotebooksChanged } = useTheme();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    fileInputRef.current?.click(); // programmatically open dialog
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      console.log(text)
+      const parsed = JSON.parse(text);
+
+      // console.log("Parsed JSON:", parsed);
+
+      // Call your import function with the parsed payload
+      const an = await importNotebook(parsed);
+      if (an === "SUCCESS") {
+        setNotebooksChanged((prev) => prev + 1)
+
+      }
+    } catch (err) {
+      console.error("Invalid JSON file", err);
+    }
+  };
+  return (
+    <>
+      <button
+        onClick={handleClick}
+        className="WelcomeMessage group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl"
+      >
+        Import
+      </button>
+
+      {/* Hidden file input */}
+      <input
+        type="file"
+        accept=".json"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+    </>
+  );
+}
+
+function ExportButton({ noteId: noteId }: { noteId: string }) {
+  return (
+    <button
+      onClick={() => {
+        exportNotebook(noteId)
+      }}
+      className="WelcomeMessage group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">Export
+    </button>
+  )
+}

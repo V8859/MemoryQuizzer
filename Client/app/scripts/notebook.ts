@@ -1,7 +1,9 @@
 import { guestMode } from "../context/DataContext";
 import { getDB } from "../GuestMode/DB";
-import { fetchNotes } from "./notes";
+import { fetchNotes, saveNotes } from "./notes";
+import { v4 as uuid } from "uuid";
 import Urls from "./urls";
+import { NoteObject } from "../Types/NoteTypes";
 
 async function getNotebooks(id?: string | null) {
   if (guestMode) {
@@ -203,6 +205,51 @@ async function exportNotebook(notebookId: string | undefined) {
   }
 }
 
+type savePayload = {
+  notes: NoteObject[];
+  notebook: NotebookObjectGuest
+  id: string ;
+  userId: string;
+};
+
+async function importNotebook(payload: savePayload) {
+
+  const notebookPayload = {
+    id: uuid(),
+    name: payload.notebook.name,
+    createdAt: new Date().toISOString(),
+    score:0
+  };
+
+  // Normalize notes
+  const normalizedNotes: NoteObject[] = [];
+  let i = 0
+
+  for (const note of payload.notes) {
+    if (i<3){
+      await new Promise(res => setTimeout(res, 200)); // 100ms delay
+    }
+
+    normalizedNotes.push({
+      ...note,
+      id: uuid(),
+      notebookId: notebookPayload.id,
+      createdAt: new Date().toISOString(),
+      score: 0,
+    });
+    i++
+  }
+  payload.notes = normalizedNotes
+
+  const an = await saveNotes(payload);
+  if (an.answer === "SUCCESS"){
+    await addNotebook(notebookPayload);
+    return "SUCCESS"
+  }else{
+    return an.answer
+  }
+
+}
 
 export {
   addNotebook,
@@ -210,5 +257,6 @@ export {
   getNotebooks,
   getNotebooksForPlay,
   renameNotebook,
-  exportNotebook
+  exportNotebook,
+  importNotebook,
 };
