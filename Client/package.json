@@ -21,7 +21,7 @@
     "chroma-js": "^3.1.2",
     "dexie": "^4.0.11",
     "lucide-react": "^0.460.0",
-    "next": "^16.0.7",
+    "next": "^15.5.7",
     "next-auth": "^5.0.0-beta.25",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
@@ -34,7 +34,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "15.0.5",
+    "eslint-config-next": "15.0.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
