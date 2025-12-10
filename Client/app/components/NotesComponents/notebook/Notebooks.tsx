@@ -51,35 +51,35 @@ const Notebooks = ({
             Notebooks
           </h1>
           <hr className="my-1 md:w-full" />
-          <div className="flex md:w-full items-center overflow-y-auto overflow-x-hidden">
-            <ul className=" flex flex-col w-full">
+          <div className="flex md:w-full items-center overflow-y-scroll overflow-x-hidden">
+            <ul className="flex flex-col w-full overflow-y-scroll flex-shrink">
               {notebooks
                 ? notebooks.map((notebook: notebook) => (
-                    <li
-                      className="NoteItem"
-                      key={notebook.id}
+                  <li
+                    className="NoteItem"
+                    key={notebook.id}
+                    onClick={async () => {
+                      // setData([]);
+                      setNoteId(notebook.id);
+                      setNotebookName(notebook.name);
+                    }}
+                  >
+                    {notebook.name}
+                    <button
+                      title="deleteNotebook"
+                      className="SizeChangeAnimation"
                       onClick={async () => {
-                        // setData([]);
-                        setNoteId(notebook.id);
-                        setNotebookName(notebook.name);
+                        const payload = {
+                          id: notebook.id,
+                        };
+                        setModal(true);
+                        setPayload(payload);
                       }}
                     >
-                      {notebook.name}
-                      <button
-                        title="deleteNotebook"
-                        className="SizeChangeAnimation"
-                        onClick={async () => {
-                          const payload = {
-                            id: notebook.id,
-                          };
-                          setModal(true);
-                          setPayload(payload);
-                        }}
-                      >
-                        <Trash className="w-4 h-4"></Trash>
-                      </button>
-                    </li>
-                  ))
+                      <Trash className="w-4 h-4"></Trash>
+                    </button>
+                  </li>
+                ))
                 : ""}
             </ul>
           </div>

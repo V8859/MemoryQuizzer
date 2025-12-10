@@ -50,7 +50,7 @@
   }
 
   .NotebookBar {
-    @apply items-center bg-blue-300 h-full justify-center overflow-y-auto w-full overflow-x-clip md:max-w-fit px-1 border-solid border-2 rounded;
+    @apply items-center flex-shrink bg-blue-300 h-full justify-center overflow-y-scroll w-full overflow-x-clip md:max-w-fit px-1 border-solid border-2 rounded;
     background-color: var(--background);
     color: var(--foreground);
     border-color: var(--border-color);
@@ -89,13 +89,13 @@
   }
 
   .NoteBox {
-    @apply flex h-[400px] md:h-[300px] flex-col my-2 shadow-sm shadow-[var(--hoverColor)] rounded mb-5 p-2;
-    background-color: var(--color-note);
+    @apply flex h-[400px] md:h-fit border-2 flex-col drop-shadow-xl shadow-sm my-2 shadow-[var(--hoverColor)] rounded mb-5 p-2;
+    background-color: var(--background);
   }
 
   .NoteObject {
-    @apply resize-none w-full bg-inherit focus:border-b-2 focus:border-b-[var(--hoverColor)] outline-none;
-    color: var(--foreground);
+    @apply resize-none w-full rounded p-2 bg-[--var-textHoverColor] outline-none;
+    /* /*focus:border-b-2 / focus:border-b-[var(--hoverColor)]* */
   }
 
   .NoteBody {
@@ -248,7 +248,7 @@ html {
 @layer base {
   html {
     --color-primary: #4285f4;
-    --color-note: #6a78a31f;
+    --color-note: #ffffff1d;
     --color-secondary: #34a853;
     --color-buttons: #fbbc05;
     --color-typography: #ea4335;

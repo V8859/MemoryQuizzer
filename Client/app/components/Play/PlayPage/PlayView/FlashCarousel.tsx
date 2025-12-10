@@ -223,13 +223,13 @@ const FlashCarousel = ({
               {options.length > 0
                 ? options.map((choice, key) => (
                   <div
-                    className="mx-4 w-full px-[0.2rem] py-1 flex cursor-pointer text-wrap flex-col border-2 rounded-xl hover:scale-y-105"
+                    className={`w-full flex cursor-pointer text-wrap flex-col border-2 rounded-xl ease-in-out hover:-translate-y-1 transition-all duration-600
+                      ${correctKey == key ? correct : ""} ${disabled ? "" : "hover:bg-[--hoverColor] hover:text-white"}`}
                     key={key}
                   >
                     <button
                       disabled={disabled}
-                      className={`${correctKey == key ? correct : ""} ${disabled ? "" : "hover:bg-blue-300 text-wrap rounded-xl"
-                        }`}
+                      className="p-2 "
                       onClick={() => {
                         handeChoice(choice, key);
                       }}

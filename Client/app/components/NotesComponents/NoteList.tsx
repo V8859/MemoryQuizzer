@@ -201,7 +201,7 @@ export const NoteList = ({
 
   return (
     <>
-      <div className="NoteArea">
+      <div className="NoteArea flex-grow-[2]">
         <div className="sticky top-0 z-30">
           <PageHeader
             title="Dashboard"

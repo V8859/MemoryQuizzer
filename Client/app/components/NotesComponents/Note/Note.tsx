@@ -32,14 +32,22 @@ const Note = ({
   return (
     <>
       <div className="NoteBox">
-        <Title initialValue={question} identifier={identifier}></Title>
-        <Body
-          currentLines={currentLines}
-          setCurrentLines={setCurrentLines}
-          currentValue={currentValue}
-          setCurrentValue={setCurrentValue}
-          identifier={identifier}
-        ></Body>
+        <div>
+          <span className="text-md text-blue-500">Question</span>
+          <Title initialValue={question} identifier={identifier}></Title>
+        </div>
+        <hr className="border-t-2 " />
+        <div>
+          <span className="text-md text-blue-500">Answer</span>
+          <Body
+            currentLines={currentLines}
+            setCurrentLines={setCurrentLines}
+            currentValue={currentValue}
+            setCurrentValue={setCurrentValue}
+            identifier={identifier}
+          ></Body>
+          <hr className="border-t-2" />
+        </div>
         <div className="flex flex-col items-center justify-between md:flex-row">
           <CardLink initialValue={link} identifier={identifier}></CardLink>
           <CharacterCounts currentValue={currentValue}></CharacterCounts>

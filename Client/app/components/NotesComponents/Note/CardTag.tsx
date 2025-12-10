@@ -12,14 +12,15 @@ const CardTag = ({
     setCurrentValue(e.target.value);
   };
   return (
-    <div>
+    <div className="flex flex-col">
+      <span className="text-blue-500">Tag</span>
       <textarea
         placeholder="Tag"
         name={`${identifier}_tag`}
         maxLength={20}
         value={currentValue}
         onChange={handleChange}
-        className="NoteObject placeholder:text-center text-center items-center justify-center"
+        className="NoteObject"
       />
     </div>
   );

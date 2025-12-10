@@ -12,14 +12,15 @@ const CardLink = ({
     setCurrentValue(e.target.value);
   };
   return (
-    <div>
+    <div className="flex flex-col">
+      <span className="text-blue-500">Link</span>
       <textarea
         placeholder="Link"
         name={`${identifier}_link`}
         value={currentValue}
         onChange={handleChange}
-        className="NoteObject placeholder:text-center text-center"
-      />
+        className="NoteObject"
+      ></textarea>
     </div>
   );
 };
