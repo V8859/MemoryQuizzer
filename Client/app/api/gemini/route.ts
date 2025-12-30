@@ -1,11 +1,46 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
+import { Analytics, Ratelimit } from "@upstash/ratelimit"
+import { kv } from "@vercel/kv"
+import { error } from "console";
 
 const ai = new GoogleGenAI({})
 
+const ratelimit = new Ratelimit({
+    redis: kv,
+    limiter: Ratelimit.fixedWindow(5, "24 h"),
+    analytics: true
+})
+
+
+
+
+
+
+
 export async function POST(req: Request) {
     try {
+
+        const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+        const { success, limit, reset, remaining } = await ratelimit.limit(`ratelimit_${ip}`)
+
+
         // console.log(req)
+        if (!success) {
+            return NextResponse.json(
+                { error: "Daily limit reached. Try again in 24 hours." }
+                , {
+                    status: 429,
+                    headers: {
+                        "X-RateLimit-Limit": limit.toString(),
+                        "X-RateLimit-Remaining": remaining.toString(),
+                        "X-RateLimit-Reset": reset.toString()
+                    }
+                }
+            )
+        }
+
+
         const form = await req.formData();
 
         const topic = form.get("Topic_name");          // string
@@ -86,5 +121,6 @@ export async function POST(req: Request) {
 
     } catch (error) {
         console.error("Error generating notes:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
     }
 }
