@@ -23,9 +23,9 @@ type selectedOption =
   }
   | undefined;
 export const Composer = () => {
-  const [setNoteId] = useState("");
+  // const [noteId, setNoteId] = useState("");
   const [payload, setPayload] = useState<payload | undefined>(undefined);
-  const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
+  const { setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
   const { createModal, addModal, selectedOption, setSelectedOption } = useData()
@@ -50,8 +50,8 @@ export const Composer = () => {
           setChange={setNotebooks}
           setNotebookName={setNotebookName}
           setData={setData}
+          // setNoteId={setNoteId}
           payload={payload}
-          setNoteId={setNoteId}
           setSelectedOption={setSelectedOption}
         ></DeleteConfirmation>
       ) : (
@@ -70,10 +70,10 @@ export const Composer = () => {
             />
             <DeleteButtonCover
               setModal={setModal}
-              setNotebookName={setNotebookName}
-              setNoteId={setNoteId}
+              // setNotebookName={setNotebookName}
+              // setNoteId={setNoteId}
               noteId={selectedOption?.id}
-              notebooks={notebooks}
+              // notebooks={notebooks}
               setPayload={setPayload}
             />
           </NoteList>
@@ -100,7 +100,7 @@ const DeleteConfirmation = ({
   payload,
   setNotebooksChanged,
   setSelectedOption,
-  setNoteId
+  // setNoteId
 }: {
   SetRefetch: React.Dispatch<SetStateAction<boolean>>;
   setModal: (prev: boolean) => void;
@@ -110,7 +110,7 @@ const DeleteConfirmation = ({
   setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
   setSelectedOption: React.Dispatch<SetStateAction<selectedOption>>
   payload?: payload;
-  setNoteId: React.Dispatch<SetStateAction<string>>
+  // setNoteId: React.Dispatch<SetStateAction<string>>
 }) => {
   const { toggleNoteList, toggleAlert } = useData();
   return (
@@ -161,7 +161,7 @@ const DeleteConfirmation = ({
                     toggleNoteList();
                     setNotebooksChanged((prevChange: number) => prevChange + 1);
                     setSelectedOption(undefined)
-                    setNoteId("")
+                    // setNoteId("")
                   } else {
                     setChange([]);
                   }
