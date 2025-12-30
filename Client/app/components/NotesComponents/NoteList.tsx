@@ -360,18 +360,18 @@ function ExportButton({ noteId: noteId }: { noteId: string }) {
   )
 }
 
-function CreateWithGenButton() {
-  const { setCreateModal } = useData()
-  return (
-    <button
-      onClick={() => {
-        setCreateModal((prev) => !prev)
-      }}
-      className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">
-      <span className="flex gap-1 items-center"> <Sparkles className="w-4 h-4 " />Generate with AI</span>
-    </button>
-  )
-}
+// function CreateWithGenButton() {
+//   const { setCreateModal } = useData()
+//   return (
+//     <button
+//       onClick={() => {
+//         setCreateModal((prev) => !prev)
+//       }}
+//       className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">
+//       <span className="flex gap-1 items-center"> <Sparkles className="w-4 h-4 " />Generate with AI</span>
+//     </button>
+//   )
+// }
 
 const AddNotebookButton = () => {
   const { setAddModal } = useData()
