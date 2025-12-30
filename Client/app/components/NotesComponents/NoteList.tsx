@@ -3,7 +3,7 @@ import { guestMode, useData } from "@/app/context/DataContext";
 import { useTheme } from "@/app/context/ThemeContext";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { NoteObject } from "@/app/Types/NoteTypes";
-import { CirclePlus, Save, Sparkles } from "lucide-react";
+import { CirclePlus, Save } from "lucide-react";
 import React, { SetStateAction, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import PageHeader from "../General/PageHeader";
