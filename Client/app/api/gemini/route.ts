@@ -1,8 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
-import { Analytics, Ratelimit } from "@upstash/ratelimit"
+import { Ratelimit } from "@upstash/ratelimit"
 import { kv } from "@vercel/kv"
-import { error } from "console";
 
 const ai = new GoogleGenAI({})
 
