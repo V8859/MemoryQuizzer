@@ -74,7 +74,7 @@ async function getNotebooksForPlay(id?: string) {
 
       const data = await response.json();
       // console.log(data); // Log the entire data object to inspect the structure
-      console.log(data);
+      // console.log(data);
       return data; // Assuming data is an array of notebooks
     } catch (error) {
       console.error("Error:", error);
@@ -208,7 +208,7 @@ async function exportNotebook(notebookId: string | undefined) {
 type savePayload = {
   notes: NoteObject[];
   notebook: NotebookObjectGuest
-  id: string ;
+  id: string;
   userId: string;
 };
 
@@ -218,7 +218,7 @@ async function importNotebook(payload: savePayload) {
     id: uuid(),
     name: payload.notebook.name,
     createdAt: new Date().toISOString(),
-    score:0
+    score: 0
   };
 
   // Normalize notes
@@ -226,7 +226,7 @@ async function importNotebook(payload: savePayload) {
   let i = 0
 
   for (const note of payload.notes) {
-    if (i<3){
+    if (i < 3) {
       await new Promise(res => setTimeout(res, 200)); // 100ms delay
     }
 
@@ -242,10 +242,10 @@ async function importNotebook(payload: savePayload) {
   payload.notes = normalizedNotes
 
   const an = await saveNotes(payload);
-  if (an.answer === "SUCCESS"){
+  if (an.answer === "SUCCESS") {
     await addNotebook(notebookPayload);
     return "SUCCESS"
-  }else{
+  } else {
     return an.answer
   }
 

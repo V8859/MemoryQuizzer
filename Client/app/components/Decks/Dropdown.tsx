@@ -76,17 +76,17 @@ const colourStyles: StylesConfig<ColourOption> = {
       backgroundColor: isDisabled
         ? "var(--welcome-text)"
         : isSelected
-        ? "var(--welcome-text)"
-        : isFocused
-        ? "var(--welcome-text)"
-        : "var(--welcome-text)",
+          ? "var(--welcome-text)"
+          : isFocused
+            ? "var(--welcome-text)"
+            : "var(--welcome-text)",
       color: isDisabled
         ? "blue"
         : isSelected
-        ? chroma.contrast(color, "white") > 2
-          ? "white"
-          : undefined
-        : "white",
+          ? chroma.contrast(color, "white") > 2
+            ? "white"
+            : undefined
+          : "white",
       cursor: isDisabled ? "not-allowed" : "default",
 
       ":active": {
@@ -110,7 +110,7 @@ const colourStyles: StylesConfig<ColourOption> = {
   },
   input: (styles) => ({ ...styles, ...dot() }),
   placeholder: (styles) => ({ ...styles, color: "white", ...dot() }),
-  singleValue: (styles, {}) => ({
+  singleValue: (styles, { }) => ({
     ...styles,
     color: "white",
     ...dot(),
@@ -118,8 +118,9 @@ const colourStyles: StylesConfig<ColourOption> = {
 };
 const DropDown = (props: Props) => {
   const { selectedOption, setSelectedOption } = props;
-  const { notebooks } = useTheme();
+  const { notebooks, notebooksChanged } = useTheme();
   const [options, setOptions] = useState<ColourOption[]>([]);
+  // const [refresh, setRefresh] = useState(0)
   const handleChange = (
     newValue: SingleValue<ColourOption> | MultiValue<ColourOption>
   ) => {
@@ -134,15 +135,18 @@ const DropDown = (props: Props) => {
       ...book,
       label: book.name,
     }));
-    // console.log(books);
     setOptions(books);
-  }, [notebooks]);
+  }, [notebooks, notebooksChanged]);
+
+
 
   return (
     <div className="flex justify-center mb-[4px]">
       <Select
+        instanceId="notebook-size-select"
+        isClearable
         options={options}
-        value={selectedOption}
+        value={selectedOption ?? null}
         onChange={handleChange}
         styles={colourStyles}
       ></Select>

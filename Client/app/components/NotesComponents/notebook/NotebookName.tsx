@@ -64,6 +64,7 @@ const NotebookName = ({
         </div>
       ) : (
         <button
+          title="Bt"
           className="cursor-pointer"
           onClick={() => {
             setInputMode((prevState: boolean) => !prevState);

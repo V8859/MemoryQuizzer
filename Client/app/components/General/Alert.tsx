@@ -35,18 +35,17 @@ const Alert = (props: Props) => {
 
   return (
     <div
-      className={`fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] ${
-        opacity > 0 ? "z-40" : "z-[-1]"
-      }`}
+      className={`fixed top-2 md:right-4 right-[20%] rounded md:m-5 pr-4 md:w-[25%] w-[50%] ${opacity > 0 ? "z-40" : "z-[-1]"
+        }`}
     >
       <div
-        className="rounded w-full"
-        style={{
-          opacity: opacity,
-          backgroundColor: "var(--welcome-text)",
-          transition: `opacity ${props.timing}ms ease-out`,
-          color: "var(--textHoverColor)",
-        }}
+        className={`opacity-[${opacity}] transition-opacity duration-[${props.timing}] ease-out text-[--textHoverColor] rounded bg-[--welcome-text] py-1 px-2 w-full`}
+      // style={{
+      // opacity: opacity,
+      // backgroundColor: "var(--welcome-text)",
+      // transition: `opacity ${props.timing} ms ease-out`,
+      // color: "var(--textHoverColor)",
+      // }}
       >
         <div className="flex w-full">
           <div className="flex w-full">

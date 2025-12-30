@@ -3,13 +3,24 @@ import { guestMode, useData } from "@/app/context/DataContext";
 import { useTheme } from "@/app/context/ThemeContext";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { NoteObject } from "@/app/Types/NoteTypes";
-import { CirclePlus, Save } from "lucide-react";
+import { CirclePlus, Save, Sparkles } from "lucide-react";
 import React, { SetStateAction, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import PageHeader from "../General/PageHeader";
 import Note from "./Note/Note";
 import NotebookName from "./notebook/NotebookName";
 import { exportNotebook, importNotebook } from "@/app/scripts/notebook";
+
+// type selectedOption =
+//   | {
+//     createdAt: string;
+//     id: string;
+//     label: string;
+//     name: string;
+//     score: number;
+//   }
+//   | undefined;
+
 
 type NotesIterator = {
   [noteId: string]: NoteObject;
@@ -21,6 +32,7 @@ export const NoteList = ({
   notebookName,
   data,
   setData,
+  children
 }: {
   refetch: boolean;
   data: NoteObject[];
@@ -28,9 +40,9 @@ export const NoteList = ({
   noteId: string | undefined;
   notebookName: string;
   setNobookName: React.Dispatch<SetStateAction<string>>;
+  children: React.ReactElement[]
 }) => {
-  const { setNotebooks } = useTheme();
-
+  const { setNotebooks, notebooksChanged } = useTheme();
   const { toggleNoteList, toggleAlert } = useData();
   useEffect(() => {
     const noteFetcher = async () => {
@@ -51,7 +63,7 @@ export const NoteList = ({
     };
 
     noteFetcher();
-  }, [noteId, refetch, setData]);
+  }, [noteId, refetch, setData, notebooksChanged]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -206,7 +218,9 @@ export const NoteList = ({
           <PageHeader
             title="Dashboard"
             href="/"
-            message={
+            message=
+            // {selectedOption?.name ?? "SELECT BOOK"}
+            {
               notebookName.length > 0 ? (
                 <NotebookName
                   notebookName={notebookName}
@@ -217,9 +231,12 @@ export const NoteList = ({
                 "SELECT BOOK"
               )
             }
-          >{undefined}{<div className="relative flex z-10 h-10 flex-row gap-2 pr-2">
+          >{children[0]}{<div className="relative flex z-10 h-10 flex-row gap-2 pr-2">
+            <CreateWithGenButton />
+            <AddNotebookButton />
             <ImportButton />
             {noteId && <ExportButton noteId={noteId}></ExportButton>}
+            {children[1]}
           </div>}</PageHeader>
         </div>
         <form
@@ -279,6 +296,7 @@ export default NoteList;
 
 
 import { useRef } from "react";
+// import DropDown from "../Decks/Dropdown";
 
 function ImportButton() {
   const { setNotebooksChanged } = useTheme();
@@ -321,6 +339,7 @@ function ImportButton() {
       {/* Hidden file input */}
       <input
         type="file"
+        title="upload notes"
         accept=".json"
         ref={fileInputRef}
         onChange={handleFileUpload}
@@ -340,3 +359,31 @@ function ExportButton({ noteId: noteId }: { noteId: string }) {
     </button>
   )
 }
+
+function CreateWithGenButton() {
+  const { setCreateModal } = useData()
+  return (
+    <button
+      onClick={() => {
+        setCreateModal((prev) => !prev)
+      }}
+      className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">
+      <span className="flex gap-1 items-center"> <Sparkles className="w-4 h-4 " />Generate with AI</span>
+    </button>
+  )
+}
+
+const AddNotebookButton = () => {
+  const { setAddModal } = useData()
+  return (
+    <button
+      onClick={() => {
+        setAddModal((prev) => !prev)
+      }}
+      className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl"
+    >
+      Add Notebook
+    </button>
+  )
+}
+

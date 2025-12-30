@@ -26,7 +26,8 @@ const restrictedScreenSizes = ["xs", "sm", "md"];
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState("light");
-  const [expanded, setExpanded] = useState(true);
+
+  const [expanded, setExpanded] = useState(false);
   const [notebooks, setNotebooks] = useState([]);
   const [notebooksChanged, setNotebooksChanged] = useState(Number);
   const screenSize = useScreenSize();
@@ -48,7 +49,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const toggleCollapse = () => {
     if (!compareString(screenSize, restrictedScreenSizes)) {
       // console.log(!compareString(screenSize, restrictedScreenSizes));
-      setExpanded((prevState) => !prevState);
+
+      setExpanded((prevState) => {
+
+        localStorage.setItem("expanded", !prevState ? "true" : "false")
+        return !prevState
+      });
     }
   };
   useEffect(() => {
@@ -62,10 +68,17 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [theme]);
 
   useEffect(() => {
+    const expanded = localStorage.getItem("expanded")
+    if (expanded === "true") {
+      setExpanded(true)
+    } else {
+      setExpanded(false)
+    }
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme) {
       setTheme(storedTheme);
     }
+
   }, []);
 
   useEffect(() => {
@@ -87,7 +100,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     fetchNotebooks();
-    // console.log("REFETCH NOTEBOOKS");
+    console.log("REFETCH NOTEBOOKS");
   }, [notebooksChanged]);
   return (
     <ThemeContext.Provider

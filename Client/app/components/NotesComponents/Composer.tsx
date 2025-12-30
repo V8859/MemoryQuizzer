@@ -1,26 +1,47 @@
 "use client";
 import React, { SetStateAction, useState } from "react";
 import NoteList from "./NoteList";
-import Notebooks from "./notebook/Notebooks";
 import { deleteNotebook } from "@/app/scripts/notebook";
 import { useTheme } from "@/app/context/ThemeContext";
 import { guestMode, useData } from "@/app/context/DataContext";
 import { NoteObject } from "@/app/Types/NoteTypes";
+import CreateFromGenAI from "./CreateFromGenAI";
+import DeleteButtonCover from "./notebook/DeleteButtonCover";
+import DropDown from "../Decks/Dropdown";
+import AddNotebookForm from "./notebook/AddNotebookForm";
 
 type payload = {
   id: string;
 };
-
+type selectedOption =
+  | {
+    createdAt: string;
+    id: string;
+    label: string;
+    name: string;
+    score: number;
+  }
+  | undefined;
 export const Composer = () => {
-  const [noteId, setNoteId] = useState("");
+  const [setNoteId] = useState("");
   const [payload, setPayload] = useState<payload | undefined>(undefined);
   const { notebooks, setNotebooks, setNotebooksChanged } = useTheme();
   const [notebookName, setNotebookName] = useState("");
   const [modal, setModal] = useState(false);
+  const { createModal, addModal, selectedOption, setSelectedOption } = useData()
   const [data, setData] = useState<NoteObject[]>([]);
   const [refetch, setRefetch] = useState(Boolean);
   return (
     <div className="Composer md:flex-row">
+      {createModal ? <CreateFromGenAI
+        SetRefetch={setRefetch}
+        setNotebooksChanged={setNotebooksChanged}
+        setChange={setNotebooks}
+        setNotebookName={setNotebookName}
+        payload={payload}
+      /> : ""}
+      {addModal ? <AddNotebookForm /> : ""}
+
       {modal ? (
         <DeleteConfirmation
           setModal={setModal}
@@ -30,6 +51,8 @@ export const Composer = () => {
           setNotebookName={setNotebookName}
           setData={setData}
           payload={payload}
+          setNoteId={setNoteId}
+          setSelectedOption={setSelectedOption}
         ></DeleteConfirmation>
       ) : (
         <div className="flex w-full h-full flex-col md:flex-row gap-2">
@@ -39,15 +62,29 @@ export const Composer = () => {
             refetch={refetch}
             notebookName={notebookName}
             setNobookName={setNotebookName}
-            noteId={noteId}
-          ></NoteList>
-          <Notebooks
+            noteId={selectedOption?.id}
+          >
+            <DropDown
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+            />
+            <DeleteButtonCover
+              setModal={setModal}
+              setNotebookName={setNotebookName}
+              setNoteId={setNoteId}
+              noteId={selectedOption?.id}
+              notebooks={notebooks}
+              setPayload={setPayload}
+            />
+          </NoteList>
+
+          {/* <Notebooks
             setModal={setModal}
             setNotebookName={setNotebookName}
             setNoteId={setNoteId}
             notebooks={notebooks}
             setPayload={setPayload}
-          ></Notebooks>
+          ></Notebooks> */}
         </div>
       )}
     </div>
@@ -62,6 +99,8 @@ const DeleteConfirmation = ({
   setNotebookName,
   payload,
   setNotebooksChanged,
+  setSelectedOption,
+  setNoteId
 }: {
   SetRefetch: React.Dispatch<SetStateAction<boolean>>;
   setModal: (prev: boolean) => void;
@@ -69,7 +108,9 @@ const DeleteConfirmation = ({
   setChange: React.Dispatch<SetStateAction<never[]>>;
   setNotebookName: React.Dispatch<SetStateAction<string>>;
   setNotebooksChanged: React.Dispatch<SetStateAction<number>>;
+  setSelectedOption: React.Dispatch<SetStateAction<selectedOption>>
   payload?: payload;
+  setNoteId: React.Dispatch<SetStateAction<string>>
 }) => {
   const { toggleNoteList, toggleAlert } = useData();
   return (
@@ -119,6 +160,8 @@ const DeleteConfirmation = ({
                     SetRefetch((prev) => !prev);
                     toggleNoteList();
                     setNotebooksChanged((prevChange: number) => prevChange + 1);
+                    setSelectedOption(undefined)
+                    setNoteId("")
                   } else {
                     setChange([]);
                   }

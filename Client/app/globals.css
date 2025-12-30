@@ -227,6 +227,17 @@
       color: var(--textHoverColor);
     }
   }
+
+
+  .ModalButtonSelection {
+    @apply rounded w-[90%] py-2 px-3 mb-2 mt-1 mx-3 flex justify-center;
+    color: white;
+
+    &:hover {
+      background-color: var(--hoverColor);
+      color: var(--textHoverColor);
+    }
+  }
 }
 
 /* Makes text smoother (Recommended) */
@@ -263,7 +274,7 @@ html {
 }
 
 html[data-theme="dark"] {
-  --welcome-text: rgba(0, 225, 255, 0.548);
+  --welcome-text: rgb(1, 159, 180);
   --header: #494949;
   --background: #000000;
   --foreground: #ffffff;

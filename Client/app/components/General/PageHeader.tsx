@@ -43,9 +43,9 @@ const PageHeader = (props: Props) => {
         <div className="w-full flex items-end justify-between">
 
           <div className="w-fit items-center justify-center WelcomeMessage flex gap-2 font-sans pt-2 px-4 rounded-t-xl">
-            <h1 className="text-[20px]">
+            <div className="text-[20px] relative">
               {props.children?.[0] ? props.children?.[0] : props.message}
-            </h1>
+            </div>
             {props.userName ? (
               <h1
                 className={
@@ -56,7 +56,7 @@ const PageHeader = (props: Props) => {
               ""
             )}
           </div>
-          <div>
+          <div >
             {props.children?.[1]}
           </div>
         </div>

@@ -41,7 +41,7 @@ const Notebooks = ({
   // }, []);
 
   return (
-    <div className="NotebookBar BigDivShadow">
+    <div className="NotebookBar z-10 BigDivShadow">
       <aside className="my-5 mx-1 rounded-xl items-center justify-center text-center md:text-left">
         <nav className="h-full flex flex-col items-center md:items-start justify-center">
           <>
@@ -52,7 +52,7 @@ const Notebooks = ({
           </h1>
           <hr className="my-1 md:w-full" />
           <div className="flex md:w-full items-center overflow-y-scroll overflow-x-hidden">
-            <ul className="flex flex-col w-full overflow-y-scroll flex-shrink">
+            <ul className="flex flex-col w-full bg-red-900 overflow-y-scroll flex-shrink">
               {notebooks
                 ? notebooks.map((notebook: notebook) => (
                   <li
