@@ -1,43 +1,39 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit"
-import { kv } from "@vercel/kv"
+// import { Ratelimit } from "@upstash/ratelimit"
+// import { kv } from "@vercel/kv"
 
 const ai = new GoogleGenAI({})
 
-const ratelimit = new Ratelimit({
-    redis: kv,
-    limiter: Ratelimit.fixedWindow(5, "24 h"),
-    analytics: true
-})
-
-
-
-
-
-
+// const ratelimit = new Ratelimit({
+//     redis: kv,
+//     limiter: Ratelimit.fixedWindow(5, "24 h"),
+//     analytics: true
+// })
 
 export async function POST(req: Request) {
     try {
+        console.log("GEMINI API WAS CALLED")
 
-        const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
-        const { success, limit, reset, remaining } = await ratelimit.limit(`ratelimit_${ip}`)
+        // const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
+        // const { success, limit, reset, remaining } = await ratelimit.limit(`ratelimit_${ip}`)
 
 
         // console.log(req)
-        if (!success) {
-            return NextResponse.json(
-                { error: "Daily limit reached. Try again in 24 hours." }
-                , {
-                    status: 429,
-                    headers: {
-                        "X-RateLimit-Limit": limit.toString(),
-                        "X-RateLimit-Remaining": remaining.toString(),
-                        "X-RateLimit-Reset": reset.toString()
-                    }
-                }
-            )
-        }
+        // if (!success) {
+        //     console.log("DAILY RATE LIMIT REACHED")
+        //     return NextResponse.json(
+        //         { error: "Daily limit reached. Try again in 24 hours." }
+        //         , {
+        //             status: 429,
+        //             headers: {
+        //                 "X-RateLimit-Limit": limit.toString(),
+        //                 "X-RateLimit-Remaining": remaining.toString(),
+        //                 "X-RateLimit-Reset": reset.toString()
+        //             }
+        //         }
+        //     )
+        // }
 
 
         const form = await req.formData();
@@ -114,6 +110,7 @@ export async function POST(req: Request) {
         // 4. Access the response text correctly
         if (response.text && response) {
             const responseText = JSON.parse(response.text)
+            console.log(responseText)
             return NextResponse.json({ responseText })
             // return JSON.parse(responseText);
         }
