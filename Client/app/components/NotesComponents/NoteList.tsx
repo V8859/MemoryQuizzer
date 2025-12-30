@@ -232,7 +232,7 @@ export const NoteList = ({
               )
             }
           >{children[0]}{<div className="relative flex z-10 h-10 flex-row gap-2 pr-2">
-            <CreateWithGenButton />
+            {/* <CreateWithGenButton /> */}
             <AddNotebookButton />
             <ImportButton />
             {noteId && <ExportButton noteId={noteId}></ExportButton>}
