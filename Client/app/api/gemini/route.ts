@@ -4,7 +4,7 @@ import { Ratelimit } from "@upstash/ratelimit"
 import { kv } from "@vercel/kv"
 
 const ai = new GoogleGenAI({})
-export const maxDuration = 300
+export const maxDuration = 60
 
 const ratelimit = new Ratelimit({
     redis: kv,
