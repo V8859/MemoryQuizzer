@@ -47,6 +47,9 @@ const CreateFromGenAI = ({
                 }
             )
             if (!response.body) throw new Error("no response body")
+            if (response.status === 429) {
+                toggleAlert("Daily limit reached: No more completions remaining")
+            }
 
 
             const reader = response.body.getReader()
@@ -81,6 +84,7 @@ const CreateFromGenAI = ({
 
         } catch (error) {
             console.error(error)
+            toggleAlert("No more completions remaining")
         } finally {
             setDisabled(false)
         }

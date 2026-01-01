@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
         console.log(req)
         if (!success) {
-            console.log("DAILY RATE LIMIT REACHED")
+            // console.log("DAILY RATE LIMIT REACHED")
             return NextResponse.json(
                 { error: "Daily limit reached. Try again in 24 hours." }
                 , {
