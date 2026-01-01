@@ -3,7 +3,7 @@ import { guestMode, useData } from "@/app/context/DataContext";
 import { useTheme } from "@/app/context/ThemeContext";
 import { fetchNotes, saveNotes } from "@/app/scripts/notes";
 import { NoteObject } from "@/app/Types/NoteTypes";
-import { CirclePlus, Save } from "lucide-react";
+import { CirclePlus, Save, Sparkles } from "lucide-react";
 import React, { SetStateAction, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import PageHeader from "../General/PageHeader";
@@ -63,7 +63,7 @@ export const NoteList = ({
     };
 
     noteFetcher();
-  }, [noteId, refetch, setData, notebooksChanged]);
+  }, [noteId, refetch, setData, notebooksChanged, toggleNoteList]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -232,7 +232,7 @@ export const NoteList = ({
               )
             }
           >{children[0]}{<div className="relative flex z-10 h-10 flex-row gap-2 pr-2">
-            {/* <CreateWithGenButton /> */}
+            <CreateWithGenButton />
             <AddNotebookButton />
             <ImportButton />
             {noteId && <ExportButton noteId={noteId}></ExportButton>}
@@ -360,18 +360,18 @@ function ExportButton({ noteId: noteId }: { noteId: string }) {
   )
 }
 
-// function CreateWithGenButton() {
-//   const { setCreateModal } = useData()
-//   return (
-//     <button
-//       onClick={() => {
-//         setCreateModal((prev) => !prev)
-//       }}
-//       className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">
-//       <span className="flex gap-1 items-center"> <Sparkles className="w-4 h-4 " />Generate with AI</span>
-//     </button>
-//   )
-// }
+function CreateWithGenButton() {
+  const { setCreateModal } = useData()
+  return (
+    <button
+      onClick={() => {
+        setCreateModal((prev) => !prev)
+      }}
+      className="WelcomeMessage items-start gap-1 group relative flex ease-in-out justify-start p-2 transition-all duration-300 mt-2 hover:-mt-2 rounded-t-xl">
+      <span className="flex gap-1 items-center"> <Sparkles className="w-4 h-4 " />Generate with AI</span>
+    </button>
+  )
+}
 
 const AddNotebookButton = () => {
   const { setAddModal } = useData()

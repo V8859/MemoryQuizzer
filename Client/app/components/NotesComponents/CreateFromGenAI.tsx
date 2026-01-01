@@ -46,16 +46,43 @@ const CreateFromGenAI = ({
                     body: formData
                 }
             )
-            const res = await response.json()
-            // console.log(res)
-            const an = await importNotebook(res.responseText)
-            if (an) {
-                setNotebooksChanged((prev) => prev + 1)
+            if (!response.body) throw new Error("no response body")
+
+
+            const reader = response.body.getReader()
+            const decoder = new TextDecoder()
+            let fullText = ""
+
+            while (true) {
+                const { done, value } = await reader.read()
+                if (done) break
+
+                const chunkText = decoder.decode(value, { stream: true });
+                fullText += chunkText
+
+                // ADD progress bar for later on
+
             }
-            toggleAlert("Saved everything")
-            setDisabled(false)
+
+            try {
+                console.log(fullText)
+                const res = JSON.parse(fullText)
+                const an = await importNotebook(res)
+                if (an) {
+                    setNotebooksChanged((prev) => prev + 1)
+                }
+                toggleAlert("Saved everything")
+                setCreateModal(false)
+            } catch (err) {
+                console.error("Streaming error: ", err)
+            }
+
+            // console.log(res)
+
         } catch (error) {
             console.error(error)
+        } finally {
+            setDisabled(false)
         }
 
     }
