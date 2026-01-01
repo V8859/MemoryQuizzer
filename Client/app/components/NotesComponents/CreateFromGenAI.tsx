@@ -9,11 +9,11 @@ type payload = {
 
 const deckSizes = {
     "small": 20,
-    "medium": 40,
-    "large": 60
+    "medium": 30,
+    // "large": 60
 } as const
 
-type DeckSizeKey = 20 | 40 | 60
+type DeckSizeKey = 20 | 30
 
 
 const CreateFromGenAI = ({
@@ -174,9 +174,9 @@ function NotesSizes({ setCurrentSize, currentSize }: { setCurrentSize: React.Dis
             case deckSizes.medium:
                 setCurrentSize(deckSizes.medium)
                 break;
-            case deckSizes.large:
-                setCurrentSize(deckSizes.large)
-                break;
+            // case deckSizes.large:
+            //     setCurrentSize(deckSizes.large)
+            //     break;
             default:
                 setCurrentSize(deckSizes.small)
                 break
@@ -192,9 +192,9 @@ function NotesSizes({ setCurrentSize, currentSize }: { setCurrentSize: React.Dis
             <button type="button" className={`ModalButtonSelection border-2 transition-colors duration-500 ease-in-out ${currentSize === deckSizes.medium ? "bg-[--hoverColor] border-blue-400" : "bg-blue-400 border-transparent"} `} title="medium" onClick={() => {
                 handleSizeChange(deckSizes.medium)
             }}>Medium</button>
-            <button type="button" className={`ModalButtonSelection border-2 transition-colors duration-500 ease-in-out ${currentSize === deckSizes.large ? "bg-[--hoverColor] border-red-700" : "bg-red-700 border-transparent"} `} title="large" onClick={() => {
+            {/* <button type="button" className={`ModalButtonSelection border-2 transition-colors duration-500 ease-in-out ${currentSize === deckSizes.large ? "bg-[--hoverColor] border-red-700" : "bg-red-700 border-transparent"} `} title="large" onClick={() => {
                 handleSizeChange(deckSizes.large)
-            }}>Large</button>
+            }}>Large</button> */}
         </span>
     </>)
 }
