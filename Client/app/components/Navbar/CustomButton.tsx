@@ -31,7 +31,7 @@ export const CustomButton: React.FC<buttonProps> = ({
         ? expanded
           ? "NavButton"
           : "sNavButton group "
-        : "rounded-l flex w-[100%] mb-5 py-1 justify-center relative h-[30px] z-50"
+        : "rounded-l flex w-[100%] mb-5 py-1 justify-center h-[30px] z-50"
         }`}
       onClick={
         action

@@ -44,10 +44,10 @@ export const Sidebar = async ({ }) => {
     <div className="h-full item-center top-0 sticky NavbarTransitionStyle">
       <aside className=" h-[96%] m-1 my-5 ml-1 md:ml-3 BigDivShadow rounded-xl sticky">
         <nav className="Navbar">
-          <div className="p-1 md:p-4 pb-2 flex transition-all duration-300 justify-between items-center">
+          <div className="md:p-1.5 md:py-2 p-1 pb-2 flex transition-all duration-300 justify-between items-center">
             <Logo></Logo>
           </div>
-          <ul className="flex-1 px-1 items-center justify-center">
+          <ul className="flex-1 items-center justify-center">
             <SidebarItem icon={SVG.dashboard} text={"Dashboard"} link={"/"} />
             <SidebarItem icon={SVG.Notes} text={"Notes"} link={"/Notes"} />
             <SidebarItem icon={SVG.Decks} text={"Decks"} link={"/Decks"} />
@@ -75,7 +75,7 @@ export const Sidebar = async ({ }) => {
 
                     <CustomButton
                       text="Logout"
-                      icon={<LogOut></LogOut>}
+                      icon={<LogOut className="w-5 h-5"></LogOut>}
                       tooltipText="Logout"
                       type="submit"
                     ></CustomButton>
@@ -117,7 +117,7 @@ export const Sidebar = async ({ }) => {
                 > */}
                 <CustomButton
                   text="Login"
-                  icon={<LogIn />}
+                  icon={<LogIn className="w-5 h-5" />}
                   tooltipText="Login"
                   // type="submit"
                   disabled={true}

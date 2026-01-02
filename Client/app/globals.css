@@ -22,7 +22,7 @@
   }
 
   .sNavButton {
-    @apply rounded-l flex w-[100%] mb-5 py-1 justify-center relative h-[30px] z-50;
+    @apply rounded-l flex w-full mb-5 py-1 justify-center relative h-[30px] z-50;
 
     &:hover {
       background-color: var(--hoverColorNav);

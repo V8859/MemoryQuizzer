@@ -43,7 +43,7 @@ export const NoteList = ({
   children: React.ReactElement[]
 }) => {
   const { setNotebooks, notebooksChanged } = useTheme();
-  const { toggleNoteList, toggleAlert } = useData();
+  const { toggleNoteList, toggleAlert, noteListFlag } = useData();
   useEffect(() => {
     const noteFetcher = async () => {
       try {
@@ -63,7 +63,7 @@ export const NoteList = ({
     };
 
     noteFetcher();
-  }, [noteId, refetch, setData, notebooksChanged, toggleNoteList]);
+  }, [noteId, refetch, setData, notebooksChanged]);
 
   async function handleSubmit(e: React.ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
