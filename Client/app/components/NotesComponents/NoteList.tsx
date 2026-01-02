@@ -43,7 +43,7 @@ export const NoteList = ({
   children: React.ReactElement[]
 }) => {
   const { setNotebooks, notebooksChanged } = useTheme();
-  const { toggleNoteList, toggleAlert, noteListFlag } = useData();
+  const { toggleNoteList, toggleAlert } = useData();
   useEffect(() => {
     const noteFetcher = async () => {
       try {
